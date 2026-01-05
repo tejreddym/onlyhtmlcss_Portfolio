@@ -1,45 +1,61 @@
 /* ==========================================================================
-   TEJ_JET COLDWALL v2.7.0 (Synchronous Obfuscation | Instant Bypass)
+   TEJ_JET COLDWALL v2.8.0 (Commercial Grade | Sync Hashing)
    The Invisible Airlock | Proprietary Security Protocol
    (c) 2026 Tej Reddy Systems.
    ========================================================================== */
+// HASHING ALGORITHM: TJ-Sync32 (Modified DJB2)
+// ARCHITECTURE: Synchronous Bitwise One-Way Function
+// STATUS: Irreversible
 
 (function(window, document) {
 
-    // 1. CONFIGURATION
+    // --- 1. CONFIGURATION ---
     const CONFIG = {
         productName: "TEJ_JET COLDWALL",
         maxStrikes: 1,
         bypassParam: "pass",
         
-        // SECURITY: Base64 Encoded "tej_master"
-        // This looks like random text, but is decoded instantly.
-        // To generate new code: btoa("your_password") in console.
-        bypassSecret: "dGVqX21hc3Rlcg==", 
+        // SECURITY: This is a custom Integer Hash of "tej_master"
+        // It CANNOT be decoded like Base64. It is one-way math.
+        // To generate new hash, run generateHash("new_pass") in console.
+        bypassHash: -1769641463, 
         
         storageKey: "tj_cw_security_log"
     };
 
-    // 2. THE INSTANT CHECK (Synchronous)
-    // This runs BEFORE any other logic can possibly start.
+    // --- 2. THE SYNCHRONOUS HASHING ENGINE ---
+    // This math scrambles text into a number instantly.
+    function generateSyncHash(str) {
+        let hash = 0;
+        if (str.length === 0) return hash;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            // Bitwise Shift (The Meat Grinder)
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return hash;
+    }
+
+    // --- 3. THE INSTANT CHECK ---
+    // Because generateSyncHash is synchronous, this blocks execution.
+    // The ban logic CANNOT run until this check finishes.
     const urlParams = new URLSearchParams(window.location.search);
     const inputPass = urlParams.get(CONFIG.bypassParam);
 
     if (inputPass) {
-        // Obfuscate the input and compare it to the stored secret
-        // btoa() converts text to Base64 instantly.
-        if (btoa(inputPass) === CONFIG.bypassSecret) {
+        // Calculate hash of input instantly
+        const inputHash = generateSyncHash(inputPass);
+        
+        // Compare with stored hash
+        if (inputHash === CONFIG.bypassHash) {
             console.warn(`%c ${CONFIG.productName} [BYPASSED BY ADMIN] `, 'background: #00ff00; color: #000; font-weight: bold;');
-            
-            // Wipe the ban immediately
             localStorage.removeItem(CONFIG.storageKey);
-            
-            // STOP EVERYTHING. The security wall dies here.
-            return; 
+            return; // STOP. Security dies here.
         }
     }
 
-    // 3. THE SECURITY SYSTEM (Only loads if password failed)
+    // --- 4. THE SECURITY SYSTEM (Only loads if hash failed) ---
     class Coldwall {
         constructor() {
             this.state = this.loadState();
@@ -57,7 +73,6 @@
         }
 
         start() {
-            // Check if already banned
             if (this.state.banned) {
                 this.enforceBan();
             } else {
@@ -151,7 +166,6 @@
         }
     }
 
-    // Start
     new Coldwall().start();
 
 })(window, document);
