@@ -96,10 +96,10 @@ document.addEventListener("DOMContentLoaded", function() {
                         "prefix");
                     break;
 
-                case '/projects': initiateRedirect("./projects.html"); break;
-                case '/about':    initiateRedirect("./about.html"); break;
-                case '/interests':initiateRedirect("./interests.html"); break;
-                case '/contact':  initiateRedirect("./contact.html"); break;
+                case '/projects': initiateRedirect("./projects"); break;
+                case '/about':    initiateRedirect("./about"); break;
+                case '/interests':initiateRedirect("./interests"); break;
+                case '/contact':  initiateRedirect("./contact"); break;
                 
                 case '/clear':
                     chatBox.innerHTML = '';
