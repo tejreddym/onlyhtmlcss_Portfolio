@@ -1,61 +1,65 @@
-/* ==========================================================================
-   TEJ_JET COLDWALL v2.8.0 (Commercial Grade | Sync Hashing)
-   The Invisible Airlock | Proprietary Security Protocol
-   (c) 2026 Tej Reddy Systems.
-   ========================================================================== */
 // HASHING ALGORITHM: TJ-Sync32 (Modified DJB2)
 // ARCHITECTURE: Synchronous Bitwise One-Way Function
 // STATUS: Irreversible
 
+/* ==========================================================================
+   TEJ_JET COLDWALL v2.9.0 (Diagnostic Mode)
+   The Invisible Airlock | Proprietary Security Protocol
+   (c) 2026 Tej Reddy Systems.
+   ========================================================================== */
+
 (function(window, document) {
 
-    // --- 1. CONFIGURATION ---
+    // 1. CONFIGURATION
     const CONFIG = {
         productName: "TEJ_JET COLDWALL",
         maxStrikes: 1,
         bypassParam: "pass",
         
-        // SECURITY: This is a custom Integer Hash of "tej_master"
-        // It CANNOT be decoded like Base64. It is one-way math.
-        // To generate new hash, run generateHash("new_pass") in console.
+        // This is the Target Hash we expect for "tej_master"
         bypassHash: -1769641463, 
         
         storageKey: "tj_cw_security_log"
     };
 
-    // --- 2. THE SYNCHRONOUS HASHING ENGINE ---
-    // This math scrambles text into a number instantly.
+    // 2. SYNC HASHING ENGINE
     function generateSyncHash(str) {
         let hash = 0;
         if (str.length === 0) return hash;
         for (let i = 0; i < str.length; i++) {
             const char = str.charCodeAt(i);
-            // Bitwise Shift (The Meat Grinder)
             hash = ((hash << 5) - hash) + char;
             hash = hash & hash; // Convert to 32bit integer
         }
         return hash;
     }
 
-    // --- 3. THE INSTANT CHECK ---
-    // Because generateSyncHash is synchronous, this blocks execution.
-    // The ban logic CANNOT run until this check finishes.
+    // 3. THE DIAGNOSTIC CHECK
     const urlParams = new URLSearchParams(window.location.search);
     const inputPass = urlParams.get(CONFIG.bypassParam);
 
     if (inputPass) {
-        // Calculate hash of input instantly
-        const inputHash = generateSyncHash(inputPass);
+        const calculatedHash = generateSyncHash(inputPass);
         
-        // Compare with stored hash
-        if (inputHash === CONFIG.bypassHash) {
-            console.warn(`%c ${CONFIG.productName} [BYPASSED BY ADMIN] `, 'background: #00ff00; color: #000; font-weight: bold;');
+        console.log("TEJ_JET DIAGNOSTIC:", {
+            input: inputPass,
+            calculated: calculatedHash,
+            expected: CONFIG.bypassHash
+        });
+
+        // IF MATCH
+        if (calculatedHash === CONFIG.bypassHash) {
+            console.warn("✅ HASH MATCH. Access Granted.");
             localStorage.removeItem(CONFIG.storageKey);
-            return; // STOP. Security dies here.
+            return; // Stop Security
+        } 
+        // IF MISMATCH (This will tell us why it failed)
+        else {
+             alert(`⚠️ ACCESS DENIED.\n\nInput: "${inputPass}"\nCalculated Hash: ${calculatedHash}\nExpected Hash: ${CONFIG.bypassHash}`);
         }
     }
 
-    // --- 4. THE SECURITY SYSTEM (Only loads if hash failed) ---
+    // 4. SECURITY SYSTEM
     class Coldwall {
         constructor() {
             this.state = this.loadState();
@@ -78,7 +82,6 @@
             } else {
                 console.log(`${CONFIG.productName} [ARMED]`);
                 this.armTriggers();
-                this.armDebuggerTrap();
             }
         }
 
@@ -89,7 +92,6 @@
             });
 
             document.addEventListener('keydown', (e) => {
-                // F12
                 if(e.key === 'F12') {
                     e.preventDefault();
                     this.handleViolation("F12 Debugger");
@@ -97,26 +99,14 @@
                 }
                 const isCtrlOrCmd = e.ctrlKey || e.metaKey;
                 const isShift = e.shiftKey;
-                const isAlt = e.altKey;
                 const key = e.key.toUpperCase();
 
-                if ( (isCtrlOrCmd && isShift && ['I','J','C'].includes(key)) ||
-                     (isCtrlOrCmd && isAlt && ['I','J','C'].includes(key)) ||
+                if ( (isCtrlOrCmd && e.shiftKey && ['I','J','C'].includes(key)) ||
                      (isCtrlOrCmd && key === 'U') ) {
                     e.preventDefault();
                     this.handleViolation("DevTools Shortcut Detected");
                 }
             });
-        }
-
-        armDebuggerTrap() {
-            setInterval(() => {
-                const start = performance.now();
-                debugger; 
-                if (performance.now() - start > 100) {
-                    this.handleViolation("DevTools Timing Attack");
-                }
-            }, 1000); 
         }
 
         handleViolation(reason) {
@@ -127,21 +117,7 @@
         }
 
         triggerWarning(reason) {
-            const existing = document.getElementById('tj-warning-modal');
-            if (existing) existing.remove();
-            const modal = document.createElement('div');
-            modal.id = 'tj-warning-modal';
-            modal.innerHTML = `
-                <div style="position: fixed; top: 20px; right: 20px; z-index: 2147483647; 
-                            background: #000; border: 1px solid #FFD700; color: #FFD700; 
-                            padding: 20px; border-radius: 4px; font-family: monospace; 
-                            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);">
-                    <h3 style="margin: 0 0 10px 0; border-bottom: 1px solid #333;">⚠️ SECURITY ALERT</h3>
-                    <p style="margin: 0; font-size: 13px;"><strong>Trigger:</strong> ${reason}</p>
-                    <p style="margin: 10px 0 0 0; color: #ff3333;">STRIKE ${this.state.strikes}/${CONFIG.maxStrikes + 1}</p>
-                </div>`;
-            document.body.appendChild(modal);
-            setTimeout(() => { if (modal) modal.remove(); }, 4000);
+            alert(`⚠️ SECURITY ALERT\nTrigger: ${reason}\nStrike: ${this.state.strikes}/${CONFIG.maxStrikes + 1}`);
         }
 
         triggerBan() {
@@ -152,17 +128,7 @@
 
         enforceBan() {
             try { window.stop(); } catch(e){}
-            document.documentElement.innerHTML = `
-                <html style="background: #000; height: 100%;">
-                <body style="background: #000; color: #f00; display: flex; align-items: center; justify-content: center; height: 100%; font-family: monospace;">
-                    <div style="text-align: center; border: 2px solid #f00; padding: 40px;">
-                        <h1 style="font-size: 50px; margin: 0;">🚫 ACCESS DENIED</h1>
-                        <p style="color: #fff; margin-top: 20px;">SECURITY PROTOCOL TEJ_JET 3.6.9.0</p>
-                    </div>
-                </body>
-                </html>
-            `;
-            setInterval(() => { debugger; }, 100); 
+            document.documentElement.innerHTML = `<h1 style="color:red; text-align:center; margin-top:20%;">🚫 ACCESS DENIED</h1>`;
         }
     }
 
