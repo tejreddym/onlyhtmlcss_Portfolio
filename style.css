@@ -34,7 +34,7 @@ body {
 .navbar-brand,
 .navbar-nav .nav-link {
   color: #f2f2f2 !important;
-  border-radius: 10px;
+  border-radius: 1px;
 }
 
 .navbar-nav .nav-link:hover {
@@ -131,15 +131,38 @@ body {
   align-items: center;
 }
 
+/* --- UPDATED MONITOR SIZE --- */
 .monitor-box {
   background-color: #404040;
-  width: 320px;
-  height: 320px;
+  /* Match the Dictionary Card size */
+  width: 100%;
+  max-width: 550px; /* Was 320px. Now much bigger */
+  aspect-ratio: 1 / 1; /* Keeps it square */
   padding: 22px;
   border-radius: 26px;
   border: 5px solid #737373;
   position: relative;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Update the Terminal Text size for better reading */
+.terminal_body {
+  padding: 20px;
+  font-size: 16px; /* Bigger text */
+  line-height: 1.6;
+  height: 100%;
+  overflow-y: auto; /* Allow scrolling if chat gets long */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Start text from bottom like a real terminal */
+}
+
+/* Hide scrollbar for sleek look */
+.terminal_body::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
 }
 
 .screen {
@@ -263,3 +286,226 @@ body {
 @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 @keyframes showPrompt { to { opacity: 1; } }
 @keyframes wipeScreen { to { height: 0; opacity: 0; margin: 0; padding: 0; } }
+
+/* --- BRAND DOT (System Status Light) --- */
+.brand-dot {
+  color: #00ff00; /* Hacker Green */
+  display: inline-block; /* Required for animation */
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.6); /* Constant subtle glow */
+  animation: statusBlink 2s infinite ease-in-out;
+}
+
+/* The Blinking Animation */
+@keyframes statusBlink {
+  0% { 
+    opacity: 1; 
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.6);
+  }
+  50% { 
+    opacity: 0.3; /* Fades out */
+    text-shadow: none;
+  }
+  100% { 
+    opacity: 1; /* Fades back in */
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.6);
+  }
+}
+
+.navbar-brand:hover .brand-dot {
+    animation-duration: 0.5s;
+    text-shadow: 0 0 15px #00ff00; /* Stronger glow on hover */
+}
+
+
+/* --- CUSTOM TEXT SELECTION (Hacker Style) --- */
+::selection {
+    background-color: #00ff00; /* Neon Green Background */
+    color: #000000;            /* Black Text for contrast */
+    text-shadow: none;         /* Removes glow effects for readability */
+}
+
+/* Firefox Backup */
+::-moz-selection {
+    background-color: #00ff00;
+    color: #000000;
+    text-shadow: none;
+}
+
+
+/* --- ACTIVE NAV LINK (Underline Style) --- */
+.navbar-nav .nav-link.active {
+    background-color: transparent !important; /* Removes the green box */
+    box-shadow: none !important;              /* Removes the box glow */
+    border: none !important;                  /* Removes the border */
+    
+    /* The New Look */
+    color: #00ff00 !important;                /* Neon Green Text */
+    border-bottom: 2px solid #00ff00 !important; /* Neon Green Underline */
+    padding-bottom: 5px;                      /* Spacing between text and line */
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.6); /* Subtle text glow */
+}
+
+/* --- HOVER STATE (Grey Effect) --- */
+.navbar-nav .nav-link:hover {
+    color: #F2F2F2 !important;
+    background-color: #202020 !important; /* Light Grey on Hover */
+    text-shadow: none;         /* Clean look */
+    transition: color 0.3s ease;
+}
+
+/* Ensure the active link stays green even when you hover over it */
+.navbar-nav .nav-link.active:hover {
+    color: #00ff00 !important;
+    background-color: transparent !important;
+    cursor: default;
+}
+
+
+/* =========================================
+   FIXED MONITOR STYLES (PINNED & PERFECT)
+   ========================================= */
+
+/* 1. THE BEZEL (Outer Grey Box) */
+.monitor-box {
+  background-color: #404040;
+  width: 100%;
+  max-width: 480px;        /* Perfect width */
+  height: 420px;           /* Fixed height */
+  
+  border-radius: 20px;     
+  border: 4px solid #737373;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+  
+  /* CRITICAL: Allows the screen to be pinned inside */
+  position: relative; 
+  box-sizing: border-box;
+  margin: 0 auto; /* Centers the whole monitor in the column */
+}
+
+/* 2. THE SCREEN (Glass Display) */
+.screen {
+  /* PINNING STRATEGY: Locks the screen inside the bezel */
+  position: absolute;
+  top: 18px;    /* Distance from top edge */
+  bottom: 18px; /* Distance from bottom edge */
+  left: 18px;   /* Distance from left edge */
+  right: 18px;  /* Distance from right edge */
+  
+  /* Styling */
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.95), rgba(10, 10, 10, 1));
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 1);
+  overflow: hidden; /* Keeps content inside */
+}
+
+/* 3. REFLECTION (Gloss) */
+.screen::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), transparent);
+  pointer-events: none;
+}
+
+/* 4. TERMINAL CONTAINER */
+.terminal {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  
+  font-family: 'Courier Prime', monospace;
+  color: #F2F2F2;
+  overflow-y: auto; /* Scrollable text */
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.terminal::-webkit-scrollbar { width: 0; }
+
+/* 5. TEXT STYLES */
+.output-line {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #bfbfbf;
+}
+
+.prefix {
+  color: #00ff00;
+  font-weight: bold;
+  margin-right: 10px;
+  text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+}
+
+.user-prompt {
+  color: #33ccff;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+/* 6. INPUT */
+.input-line {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.terminal-input {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-family: 'Courier Prime', monospace;
+  font-size: 1rem;
+  width: 100%;
+  outline: none;
+}
+
+/* =========================================
+   BOOT SEQUENCE ANIMATION STYLES
+   ========================================= */
+
+/* The Boot Screen Container */
+#boot-screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Start from top */
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.9rem;
+  color: #00ff00; /* All text green during boot */
+  line-height: 1.5;
+}
+
+/* Individual Log Lines */
+.boot-line {
+  margin-bottom: 4px;
+  opacity: 0; /* Hidden initially, JS fades them in */
+  animation: fadeIn 0.1s forwards;
+}
+
+/* The Timestamp [ 0.000000 ] */
+.timestamp {
+  color: #008f00; /* Darker green for contrast */
+  margin-right: 8px;
+}
+
+/* The Cursor Block █ */
+.cursor-block {
+  display: inline-block;
+  width: 10px;
+  height: 16px;
+  background-color: #00ff00;
+  animation: blink 1s infinite;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes blink { 50% { opacity: 0; } }

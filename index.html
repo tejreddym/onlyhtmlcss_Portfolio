@@ -2,14 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="./images/rocket.webp" type="image/webp">
+    <link rel="icon" href="./images/rocket.webp" type="image/webp" />
     <title>tejreddym.</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Courier+Prime:wght@400;700&display=swap"
       rel="stylesheet"
     />
 
@@ -24,7 +24,7 @@
 
     <style>
       body {
-        overflow: hidden !important; /* Forces no scrollbar on this page only */
+        overflow: hidden !important;
         height: 100vh !important;
       }
     </style>
@@ -34,7 +34,9 @@
     <section class="header">
       <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-          <a class="navbar-brand" href="#">tejreddym.</a>
+          <a class="navbar-brand" href="/"
+            >tejreddym<span class="brand-dot">.</span></a
+          >
 
           <button
             class="navbar-toggler"
@@ -45,7 +47,10 @@
             <span class="navbar-toggler-icon"></span>
           </button>
 
-          <div class="collapse navbar-collapse justify-content-end" id="navMenu">
+          <div
+            class="collapse navbar-collapse justify-content-end"
+            id="navMenu"
+          >
             <ul class="navbar-nav">
               <li class="nav-item">
                 <a class="nav-link" href="./about.html">ABOUT</a>
@@ -54,7 +59,7 @@
                 <a class="nav-link" href="./projects.html">PROJECTS</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./interests.html">INTRESTS</a>
+                <a class="nav-link" href="./interests.html">INTERESTS</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="./contact.html">CONTACT ME</a>
@@ -68,8 +73,9 @@
     <section class="main">
       <div class="container h-100">
         <div class="row h-100 align-items-center">
-          
-          <div class="col-lg-6 d-flex justify-content-center justify-content-md-start">
+          <div
+            class="col-lg-6 d-flex justify-content-center justify-content-md-start"
+          >
             <div class="dictionary-card">
               <div class="dictionary-inner">
                 <h1 class="word">tejreddym.</h1>
@@ -83,37 +89,27 @@
             </div>
           </div>
 
-          <div class="col-lg-6 d-none d-lg-flex justify-content-center align-items-end">
+          <div
+            class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center"
+          >
             <div class="system-monitor">
               <div class="monitor-box">
                 <div class="screen">
-                  <div class="lightray-limit">
-                    <div class="lightray"></div>
-                  </div>
+                  <div class="terminal" id="terminal-interface">
+                    <div id="boot-screen"></div>
 
-                  <div class="terminal">
-                    <div class="terminal_body">
-                      <div class="boot-sequence">
-                        <div class="line">Initializing environment...</div>
-                        <div class="line">
-                          Loading kernel modules...
-                          <span class="status-ok">OK</span>
-                        </div>
-                        <div class="line">
-                          Mounting file system...
-                          <span class="status-ok">OK</span>
-                        </div>
-                        <div class="line">Welcome, user.</div>
-                      </div>
+                    <div id="chat-screen" style="display: none">
+                      <div class="terminal_body" id="chat-box"></div>
 
-                      <div class="terminal_prompt">
-                        <span class="terminal_user">tejreddym.@admin:</span>
-                        <span class="terminal_location">~</span>
-                        <span class="terminal_bling">$</span>
-                        <span class="terminal_message">
-                          <span class="lock-icon">🔒</span>
-                          Interactive mode under<br />development...
-                        </span>
+                      <div class="input-line">
+                        <span class="user-prompt">visitor@guest:~$</span>
+                        <input
+                          type="text"
+                          id="user-input"
+                          class="terminal-input"
+                          placeholder="Type here..."
+                          autocomplete="off"
+                        />
                       </div>
                     </div>
                   </div>
@@ -121,14 +117,11 @@
               </div>
             </div>
           </div>
-          
-        </div> </div>
+        </div>
+      </div>
     </section>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./scripts.js"></script>
   </body>
 </html>
