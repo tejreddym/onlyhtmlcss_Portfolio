@@ -1,61 +1,83 @@
 /* ==========================================================================
-   TEJ_JET COLDWALL v3.1.0 (Commercial + Key Generator)
+   TEJ_JET COLDWALL v4.0.0 (Cloud Connected)
    The Invisible Airlock | Proprietary Security Protocol
    (c) 2026 Tej Reddy Systems.
    ========================================================================== */
 
 (function(window, document) {
 
-    // 1. CONFIGURATION
+    // --- 1. CLOUD CONFIGURATION (PASTE YOUR KEYS HERE) ---
+    const SUPABASE_URL = "https://dsadmqmdwcxcllhnsyga.supabase.co"; 
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzYWRtcW1kd2N4Y2xsaG5zeWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2MzI1NzQsImV4cCI6MjA4MzIwODU3NH0.0D8HCsZd5i_NUdYg35ZFmOGNMB5JEbzLA5rFOONOr1U"; 
+
+    // --- 2. LOCAL CONFIGURATION ---
     const CONFIG = {
         productName: "TEJ_JET COLDWALL",
         maxStrikes: 1,
         bypassParam: "pass",
-        
-        // CUSTOMER TODO: Paste your generated hash here.
-        // Default (tej_master): -1803499192
-        bypassHash: -1803499192, 
-        
+        bypassHash: -1803499192, // Your "tej_master" hash
         storageKey: "tj_cw_security_log"
     };
 
-    // 2. SYNC HASHING ENGINE (The "Product Secret")
+    // --- 3. CLOUD LOGGING ENGINE ---
+    // This sends the "Distress Signal" to your database
+    async function logAttackToCloud(reason) {
+        if (!SUPABASE_URL || SUPABASE_URL.includes("PASTE_YOUR")) return;
+
+        const logData = {
+            trigger_reason: reason,
+            url_path: window.location.pathname,
+            user_agent: navigator.userAgent,
+            screen_resolution: `${window.screen.width}x${window.screen.height}`
+        };
+
+        try {
+            await fetch(`${SUPABASE_URL}/rest/v1/security_logs`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": `Bearer ${SUPABASE_KEY}`
+                },
+                body: JSON.stringify(logData)
+            });
+            console.log("⚠️ Attack Logged to Cloud.");
+        } catch (error) {
+            console.error("Cloud Log Failed:", error);
+        }
+    }
+
+    // --- 4. SYNC HASHING & SETUP WIZARD ---
     function generateSyncHash(str) {
         let hash = 0;
         if (!str || str.length === 0) return hash;
         for (let i = 0; i < str.length; i++) {
-            const char = str.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash; // Convert to 32bit integer
+            hash = ((hash << 5) - hash) + str.charCodeAt(i);
+            hash = hash & hash;
         }
         return hash;
     }
 
-    // 3. KEY GENERATOR (Setup Mode)
-    // Helps customers create their own hash easily.
+    // Setup Wizard
     const urlParams = new URLSearchParams(window.location.search);
-    const newPassInput = urlParams.get("generate_hash");
-
-    if (newPassInput) {
-        const newHash = generateSyncHash(newPassInput);
-        alert(`[TEJ_JET SETUP WIZARD]\n\nPassword: "${newPassInput}"\n\nYOUR HASH CODE: ${newHash}\n\nINSTRUCTIONS: Copy this number and paste it into 'bypassHash' inside coldwall.js.`);
-        // Stop execution so they can copy it.
-        throw new Error("Setup Complete. Check Alert Box.");
+    if (urlParams.get("generate_hash")) {
+        const input = urlParams.get("generate_hash");
+        const newHash = generateSyncHash(input);
+        alert(`[TEJ_JET SETUP]\nPassword: "${input}"\nHash: ${newHash}`);
+        throw new Error("Setup Complete.");
     }
 
-    // 4. INSTANT BYPASS CHECK
+    // Instant Bypass
     const inputPass = urlParams.get(CONFIG.bypassParam);
-
     if (inputPass) {
-        const calculatedHash = generateSyncHash(inputPass);
-        if (calculatedHash === CONFIG.bypassHash) {
+        if (generateSyncHash(inputPass) === CONFIG.bypassHash) {
             console.warn(`%c ${CONFIG.productName} [BYPASSED BY ADMIN] `, 'background: #00ff00; color: #000; font-weight: bold;');
             localStorage.removeItem(CONFIG.storageKey);
             return; 
         }
     }
 
-    // 5. SECURITY SYSTEM
+    // --- 5. SECURITY SYSTEM ---
     class Coldwall {
         constructor() {
             this.state = this.loadState();
@@ -87,9 +109,8 @@
                 e.preventDefault();
                 this.handleViolation("Right Click Source Access");
             });
-
+            
             document.addEventListener('keydown', (e) => {
-                // F12
                 if(e.key === 'F12') {
                     e.preventDefault();
                     this.handleViolation("F12 Debugger");
@@ -97,11 +118,8 @@
                 }
                 const isCtrlOrCmd = e.ctrlKey || e.metaKey;
                 const isShift = e.shiftKey;
-                const isAlt = e.altKey;
                 const key = e.key.toUpperCase();
-
                 if ( (isCtrlOrCmd && isShift && ['I','J','C'].includes(key)) ||
-                     (isCtrlOrCmd && isAlt && ['I','J','C'].includes(key)) ||
                      (isCtrlOrCmd && key === 'U') ) {
                     e.preventDefault();
                     this.handleViolation("DevTools Shortcut Detected");
@@ -122,26 +140,20 @@
         handleViolation(reason) {
             this.state.strikes++;
             this.saveState();
+            
+            // FIRE AND FORGET: Send log to cloud immediately
+            logAttackToCloud(reason);
+
             if (this.state.strikes > CONFIG.maxStrikes) this.triggerBan();
             else this.triggerWarning(reason);
         }
 
         triggerWarning(reason) {
-            const existing = document.getElementById('tj-warning-modal');
-            if (existing) existing.remove();
             const modal = document.createElement('div');
-            modal.id = 'tj-warning-modal';
-            modal.innerHTML = `
-                <div style="position: fixed; top: 20px; right: 20px; z-index: 2147483647; 
-                            background: #000; border: 1px solid #FFD700; color: #FFD700; 
-                            padding: 20px; border-radius: 4px; font-family: monospace; 
-                            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);">
-                    <h3 style="margin: 0 0 10px 0; border-bottom: 1px solid #333;">⚠️ SECURITY ALERT</h3>
-                    <p style="margin: 0; font-size: 13px;"><strong>Trigger:</strong> ${reason}</p>
-                    <p style="margin: 10px 0 0 0; color: #ff3333;">STRIKE ${this.state.strikes}/${CONFIG.maxStrikes + 1}</p>
-                </div>`;
+            modal.style = "position: fixed; top: 20px; right: 20px; z-index: 999999; background: #000; border: 1px solid #FFD700; color: #FFD700; padding: 20px; font-family: monospace;";
+            modal.innerHTML = `<h3>⚠️ SECURITY ALERT</h3><p>Trigger: ${reason}</p>`;
             document.body.appendChild(modal);
-            setTimeout(() => { if (modal) modal.remove(); }, 4000);
+            setTimeout(() => modal.remove(), 4000);
         }
 
         triggerBan() {
@@ -152,16 +164,7 @@
 
         enforceBan() {
             try { window.stop(); } catch(e){}
-            document.documentElement.innerHTML = `
-                <html style="background: #000; height: 100%;">
-                <body style="background: #000; color: #f00; display: flex; align-items: center; justify-content: center; height: 100%; font-family: monospace;">
-                    <div style="text-align: center; border: 2px solid #f00; padding: 40px;">
-                        <h1 style="font-size: 50px; margin: 0;">🚫 ACCESS DENIED</h1>
-                        <p style="color: #fff; margin-top: 20px;">SECURITY PROTOCOL TEJ_JET 3.6.9.0</p>
-                    </div>
-                </body>
-                </html>
-            `;
+            document.documentElement.innerHTML = `<h1 style="color:red; text-align:center; margin-top:20%;">🚫 ACCESS DENIED</h1>`;
             setInterval(() => { debugger; }, 100); 
         }
     }
