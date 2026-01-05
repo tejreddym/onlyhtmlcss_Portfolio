@@ -1,27 +1,27 @@
-// netlify/functions/chat.js
 export const handler = async (event) => {
-  // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
   try {
     const { message } = JSON.parse(event.body);
+    
+    // Check if Key exists (Debugging Step 1)
+    if (!process.env.GROQ_API_KEY) {
+      console.error("CRITICAL: GROQ_API_KEY is missing in Netlify Env Vars!");
+      throw new Error("Missing Server API Key");
+    }
 
-    // Call Groq API
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`, // Uses the secure variable
+        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: "llama3-8b-8192", // Fast and efficient model
+        model: "llama3-8b-8192", // Standard Groq model
         messages: [
-          {
-            role: "system",
-            content: "You are PEPPERai, an advanced AI assistant for Tej Reddy. You are embedded in a portfolio website terminal. Keep answers brief, technical, and 'hacker-like'. You know Tej is an AI/ML innovator interested in rocketry, IoT, and defense tech."
-          },
+          { role: "system", content: "You are PEPPERai. Keep answers brief and technical." },
           { role: "user", content: message }
         ]
       })
@@ -29,9 +29,16 @@ export const handler = async (event) => {
 
     const data = await response.json();
 
-    // Check if Groq gave a valid answer
+    // LOG THE FULL RESPONSE (This is the Fix)
+    // If Groq errors, this will show up in your Netlify Logs
+    if (!response.ok) {
+      console.error("Groq API Error:", JSON.stringify(data, null, 2));
+      throw new Error(`Groq API Error: ${data.error?.message || 'Unknown error'}`);
+    }
+
     if (!data.choices || !data.choices[0]) {
-      throw new Error('No response from AI');
+      console.error("Unexpected Structure:", JSON.stringify(data, null, 2));
+      throw new Error('No choices in response');
     }
 
     return {
@@ -40,10 +47,10 @@ export const handler = async (event) => {
     };
 
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Function Error:", error.message);
     return {
       statusCode: 500,
-      body: JSON.stringify({ reply: "Error: Connection interrupted. Signal lost." })
+      body: JSON.stringify({ reply: `System Error: ${error.message}` })
     };
   }
 };
