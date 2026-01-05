@@ -5,9 +5,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const chatScreen = document.getElementById('chat-screen');
     const chatBox = document.getElementById('chat-box');
     const userInput = document.getElementById('user-input');
+    const monitorBox = document.querySelector('.monitor-box'); // Select monitor for glow
     
     // State variables
     let pendingRedirect = null; 
+    let isAuthorized = false; // <--- THE SECRET STATE
 
     // The Boot Log Text
     const bootLogs = [
@@ -15,16 +17,15 @@ document.addEventListener("DOMContentLoaded", function() {
         "[ 0.852109] MEM: 64GB DDR5 Virtualized pool initialized",
         "[ 1.293021] NET: Establishing secure uplink... OK",
         "[ 1.502932] DRV: Neural_Core.ko loaded",
-        "[ 1.821032] DRV: Vision_Guard.ko loaded",
         "[ 2.103921] FS: Mounting /dev/sd_brain... [SUCCESS]",
-        "[ 2.400000] LOGIN: Starting TejReddy_Admin_Session..."
+        "[ 2.400000] LOGIN: Starting TejReddy_Public_Session..."
     ];
 
     let lineIndex = 0;
 
     // --- 1. BOOT SEQUENCE ---
     function runBootSequence() {
-        if (!bootScreen) return; // Safety check
+        if (!bootScreen) return;
         
         if (lineIndex < bootLogs.length) {
             const line = document.createElement('div');
@@ -50,9 +51,9 @@ document.addEventListener("DOMContentLoaded", function() {
             chatScreen.style.height = '100%';
         }
         
-        addChatMessage("PEPPERai", "Initializing connection...", "prefix");
+        addChatMessage("PEPPERai", "System Online. RESTRICTED_MODE active.", "prefix");
         setTimeout(() => {
-            addChatMessage("PEPPERai", "System Online. Type '/help' for commands.", "prefix");
+            addChatMessage("PEPPERai", "Type '/help' for commands.", "prefix");
         }, 800);
     }
 
@@ -63,14 +64,34 @@ document.addEventListener("DOMContentLoaded", function() {
         div.className = 'output-line';
         div.innerHTML = `<span class="${styleClass}">${sender}:</span> ${text}`;
         chatBox.appendChild(div);
-        chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+        chatBox.scrollTop = chatBox.scrollHeight; 
     }
 
-    // --- 3. COMMAND HANDLER (Local Logic) ---
+    // --- 3. COMMAND HANDLER ---
     function handleLocalCommand(text) {
         const cmd = text.toLowerCase().trim();
 
-        // A. Handle Redirect Confirmation (Y/N)
+        // --- SECRET HANDSHAKE LOGIC ---
+        if (cmd === "i know you and you know me") {
+            isAuthorized = true; // Unlock Admin Mode
+            
+            // 1. Visual Shift
+            monitorBox.classList.add('admin-mode');
+            
+            // 2. Change Prompt Name visually in future (handled in input listener below)
+            const promptLabel = document.querySelector('.user-prompt');
+            if(promptLabel) promptLabel.innerText = "root@system:~$";
+
+            // 3. Print Security Message
+            addChatMessage("SYSTEM", "<span class='sys-msg'>[SECURITY_BYPASS] CREDENTIALS ACCEPTED.</span>", "prefix");
+            setTimeout(() => {
+                addChatMessage("PEPPERai", "Welcome back, Architect. Admin privileges restored.", "prefix");
+            }, 800);
+            
+            return true; // Stop processing
+        }
+        // ------------------------------
+
         if (pendingRedirect) {
             if (cmd === 'y' || cmd === 'yes') {
                 addChatMessage("SYSTEM", `Redirecting...`, "prefix");
@@ -79,10 +100,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 addChatMessage("SYSTEM", "Navigation cancelled.", "prefix");
                 pendingRedirect = null;
             }
-            return true; // Stop processing
+            return true; 
         }
 
-        // B. Handle Slash Commands
         if (cmd.startsWith('/')) {
             switch (cmd) {
                 case '/help':
@@ -95,24 +115,21 @@ document.addEventListener("DOMContentLoaded", function() {
                         "&nbsp; /clear &nbsp;&nbsp;&nbsp; -> Clear Screen", 
                         "prefix");
                     break;
-
-                case '/projects': initiateRedirect("./projects"); break;
-                case '/about':    initiateRedirect("./about"); break;
-                case '/interests':initiateRedirect("./interests"); break;
-                case '/contact':  initiateRedirect("./contact"); break;
-                
+                case '/projects': initiateRedirect("./projects.html"); break;
+                case '/about':    initiateRedirect("./about.html"); break;
+                case '/interests':initiateRedirect("./interests.html"); break;
+                case '/contact':  initiateRedirect("./contact.html"); break;
                 case '/clear':
                     chatBox.innerHTML = '';
                     addChatMessage("PEPPERai", "Console cleared.", "prefix");
                     break;
-
                 default:
                     addChatMessage("SYSTEM", `Unknown command '${cmd}'. Type /help.`, "prefix");
             }
-            return true; // Important: Returns TRUE so we don't send to AI
+            return true; 
         }
 
-        return false; // Returns FALSE so we send to AI
+        return false; 
     }
 
     function initiateRedirect(url) {
@@ -127,15 +144,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 const text = userInput.value.trim();
                 if (!text) return;
 
-                // 1. Show User Input
-                addChatMessage("visitor@guest", text, "user-prompt");
+                // 1. Determine Sender Name based on Auth State
+                const senderName = isAuthorized ? "root@system" : "visitor@guest";
+                const senderStyle = isAuthorized ? "user-prompt admin-prompt" : "user-prompt";
+
+                addChatMessage(senderName, text, senderStyle);
                 userInput.value = ''; 
                 userInput.disabled = true; 
 
-                // 2. Try Local Command First
+                // 2. Local Commands
                 const isCommand = handleLocalCommand(text);
 
-                // 3. If NOT a command, send to AI
+                // 3. Network Request
                 if (!isCommand) {
                     const loadingId = "loading-" + Date.now();
                     const loadingDiv = document.createElement('div');
@@ -148,14 +168,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     try {
                         const response = await fetch('/.netlify/functions/chat', {
                             method: 'POST',
-                            body: JSON.stringify({ message: text }),
+                            // PASS THE AUTH STATE TO BACKEND
+                            body: JSON.stringify({ message: text, isAdmin: isAuthorized }),
                             headers: { 'Content-Type': 'application/json' }
                         });
 
                         const data = await response.json();
                         document.getElementById(loadingId).remove();
                         
-                        // SAFETY CHECK: Prevent "undefined"
                         if (data && data.reply) {
                             addChatMessage("PEPPERai", data.reply, "prefix");
                         } else {
@@ -174,11 +194,9 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Blink Animation
     const style = document.createElement('style');
     style.innerHTML = `.blink { animation: blinker 1s linear infinite; } @keyframes blinker { 50% { opacity: 0; } }`;
     document.head.appendChild(style);
 
-    // Start
     runBootSequence();
 });
