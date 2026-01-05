@@ -1,5 +1,5 @@
 /* ==========================================================================
-   TEJ_JET COLDWALL v3.0.0 (Production Release)
+   TEJ_JET COLDWALL v3.1.0 (Commercial + Key Generator)
    The Invisible Airlock | Proprietary Security Protocol
    (c) 2026 Tej Reddy Systems.
    ========================================================================== */
@@ -12,17 +12,17 @@
         maxStrikes: 1,
         bypassParam: "pass",
         
-        // SECURITY: Corrected Hash for "tej_master"
-        // Validated on Live Environment: -1803499192
+        // CUSTOMER TODO: Paste your generated hash here.
+        // Default (tej_master): -1803499192
         bypassHash: -1803499192, 
         
         storageKey: "tj_cw_security_log"
     };
 
-    // 2. SYNC HASHING ENGINE (TJ-Sync32 Protocol)
+    // 2. SYNC HASHING ENGINE (The "Product Secret")
     function generateSyncHash(str) {
         let hash = 0;
-        if (str.length === 0) return hash;
+        if (!str || str.length === 0) return hash;
         for (let i = 0; i < str.length; i++) {
             const char = str.charCodeAt(i);
             hash = ((hash << 5) - hash) + char;
@@ -31,27 +31,31 @@
         return hash;
     }
 
-    // 3. INSTANT BYPASS CHECK
+    // 3. KEY GENERATOR (Setup Mode)
+    // Helps customers create their own hash easily.
     const urlParams = new URLSearchParams(window.location.search);
+    const newPassInput = urlParams.get("generate_hash");
+
+    if (newPassInput) {
+        const newHash = generateSyncHash(newPassInput);
+        alert(`[TEJ_JET SETUP WIZARD]\n\nPassword: "${newPassInput}"\n\nYOUR HASH CODE: ${newHash}\n\nINSTRUCTIONS: Copy this number and paste it into 'bypassHash' inside coldwall.js.`);
+        // Stop execution so they can copy it.
+        throw new Error("Setup Complete. Check Alert Box.");
+    }
+
+    // 4. INSTANT BYPASS CHECK
     const inputPass = urlParams.get(CONFIG.bypassParam);
 
     if (inputPass) {
-        // Calculate hash instantly
         const calculatedHash = generateSyncHash(inputPass);
-        
-        // Compare with the validated hash
         if (calculatedHash === CONFIG.bypassHash) {
             console.warn(`%c ${CONFIG.productName} [BYPASSED BY ADMIN] `, 'background: #00ff00; color: #000; font-weight: bold;');
-            
-            // Wipe any previous bans
             localStorage.removeItem(CONFIG.storageKey);
-            
-            // STOP SCRIPT. Access Granted.
             return; 
         }
     }
 
-    // 4. SECURITY SYSTEM (Only loads if not Admin)
+    // 5. SECURITY SYSTEM
     class Coldwall {
         constructor() {
             this.state = this.loadState();
