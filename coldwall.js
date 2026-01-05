@@ -7,8 +7,8 @@
 (function(window, document) {
 
     // --- 1. CLOUD CONFIGURATION ---
-    const SUPABASE_URL = "PASTE_YOUR_PROJECT_URL_HERE"; 
-    const SUPABASE_KEY = "PASTE_YOUR_ANON_KEY_HERE"; 
+    const SUPABASE_URL = "https://dsadmqmdwcxcllhnsyga.supabase.co"; 
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzYWRtcW1kd2N4Y2xsaG5zeWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2MzI1NzQsImV4cCI6MjA4MzIwODU3NH0.0D8HCsZd5i_NUdYg35ZFmOGNMB5JEbzLA5rFOONOr1U"; 
 
     // --- 2. LOCAL CONFIGURATION ---
     const CONFIG = {
