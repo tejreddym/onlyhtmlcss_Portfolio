@@ -1,36 +1,58 @@
 /* ==========================================================================
-   TEJ_JET COLDWALL v4.0.0 (Cloud Connected)
+   TEJ_JET COLDWALL v4.1.0 (Geo-Tracking Enabled)
    The Invisible Airlock | Proprietary Security Protocol
    (c) 2026 Tej Reddy Systems.
    ========================================================================== */
 
 (function(window, document) {
 
-    // --- 1. CLOUD CONFIGURATION (PASTE YOUR KEYS HERE) ---
-    const SUPABASE_URL = "https://dsadmqmdwcxcllhnsyga.supabase.co"; 
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzYWRtcW1kd2N4Y2xsaG5zeWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2MzI1NzQsImV4cCI6MjA4MzIwODU3NH0.0D8HCsZd5i_NUdYg35ZFmOGNMB5JEbzLA5rFOONOr1U"; 
+    // --- 1. CLOUD CONFIGURATION ---
+    const SUPABASE_URL = "PASTE_YOUR_PROJECT_URL_HERE"; 
+    const SUPABASE_KEY = "PASTE_YOUR_ANON_KEY_HERE"; 
 
     // --- 2. LOCAL CONFIGURATION ---
     const CONFIG = {
         productName: "TEJ_JET COLDWALL",
         maxStrikes: 1,
         bypassParam: "pass",
-        bypassHash: -1803499192, // Your "tej_master" hash
+        bypassHash: -1803499192, // Your Hash
         storageKey: "tj_cw_security_log"
     };
 
-    // --- 3. CLOUD LOGGING ENGINE ---
-    // This sends the "Distress Signal" to your database
+    // --- 3. CLOUD LOGGING ENGINE (With Geo-Tracking) ---
     async function logAttackToCloud(reason) {
         if (!SUPABASE_URL || SUPABASE_URL.includes("PASTE_YOUR")) return;
 
+        // A. Fetch Spy Data (IP, Location, ISP)
+        let geoInfo = { ip: "Unknown", city: "Unknown", country: "Unknown", org: "Unknown" };
+        
+        try {
+            // We ask ipapi.co "Who is this user?"
+            const response = await fetch('https://ipapi.co/json/');
+            const data = await response.json();
+            geoInfo = {
+                ip: data.ip || "Hidden",
+                city: data.city || "Unknown",
+                country: data.country_name || "Unknown",
+                org: data.org || "Unknown ISP"
+            };
+        } catch (error) {
+            console.warn("Geo-Location failed (Adblocker active?)");
+        }
+
+        // B. Prepare the Dossier
         const logData = {
             trigger_reason: reason,
             url_path: window.location.pathname,
             user_agent: navigator.userAgent,
-            screen_resolution: `${window.screen.width}x${window.screen.height}`
+            screen_resolution: `${window.screen.width}x${window.screen.height}`,
+            // NEW FIELDS
+            ip_address: geoInfo.ip,
+            location: `${geoInfo.city}, ${geoInfo.country}`,
+            isp: geoInfo.org
         };
 
+        // C. Send to Headquarters (Supabase)
         try {
             await fetch(`${SUPABASE_URL}/rest/v1/security_logs`, {
                 method: "POST",
@@ -41,13 +63,13 @@
                 },
                 body: JSON.stringify(logData)
             });
-            console.log("⚠️ Attack Logged to Cloud.");
+            console.log("⚠️ Attack & Geo-Data Logged to Cloud.");
         } catch (error) {
             console.error("Cloud Log Failed:", error);
         }
     }
 
-    // --- 4. SYNC HASHING & SETUP WIZARD ---
+    // --- 4. SYNC HASHING & SETUP ---
     function generateSyncHash(str) {
         let hash = 0;
         if (!str || str.length === 0) return hash;
@@ -58,16 +80,13 @@
         return hash;
     }
 
-    // Setup Wizard
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("generate_hash")) {
         const input = urlParams.get("generate_hash");
-        const newHash = generateSyncHash(input);
-        alert(`[TEJ_JET SETUP]\nPassword: "${input}"\nHash: ${newHash}`);
+        alert(`[TEJ_JET SETUP]\nPassword: "${input}"\nHash: ${generateSyncHash(input)}`);
         throw new Error("Setup Complete.");
     }
 
-    // Instant Bypass
     const inputPass = urlParams.get(CONFIG.bypassParam);
     if (inputPass) {
         if (generateSyncHash(inputPass) === CONFIG.bypassHash) {
@@ -109,7 +128,6 @@
                 e.preventDefault();
                 this.handleViolation("Right Click Source Access");
             });
-            
             document.addEventListener('keydown', (e) => {
                 if(e.key === 'F12') {
                     e.preventDefault();
@@ -141,7 +159,7 @@
             this.state.strikes++;
             this.saveState();
             
-            // FIRE AND FORGET: Send log to cloud immediately
+            // FIRE AND FORGET (Now includes Geo-Data)
             logAttackToCloud(reason);
 
             if (this.state.strikes > CONFIG.maxStrikes) this.triggerBan();
