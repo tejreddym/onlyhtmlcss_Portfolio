@@ -1,5 +1,5 @@
 /* ==========================================================================
-   TEJ_JET COLDWALL v2.6.0 (Commercial Hybrid | Secure & Timing-Safe)
+   TEJ_JET COLDWALL v2.7.0 (Synchronous Obfuscation | Instant Bypass)
    The Invisible Airlock | Proprietary Security Protocol
    (c) 2026 Tej Reddy Systems.
    ========================================================================== */
@@ -10,26 +10,36 @@
     const CONFIG = {
         productName: "TEJ_JET COLDWALL",
         maxStrikes: 1,
-        
-        // SECURITY: SHA-256 HASH of "tej_master"
-        // If a hacker sees this, they only see random numbers.
         bypassParam: "pass",
-        bypassHash: "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5",
+        
+        // SECURITY: Base64 Encoded "tej_master"
+        // This looks like random text, but is decoded instantly.
+        // To generate new code: btoa("your_password") in console.
+        bypassSecret: "dGVqX21hc3Rlcg==", 
         
         storageKey: "tj_cw_security_log"
     };
 
-    // 2. CRYPTOGRAPHY ENGINE (The "Lock")
-    async function verifyPassword(inputPassword) {
-        if (!inputPassword) return false;
-        const msgBuffer = new TextEncoder().encode(inputPassword);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        return hashHex === CONFIG.bypassHash;
+    // 2. THE INSTANT CHECK (Synchronous)
+    // This runs BEFORE any other logic can possibly start.
+    const urlParams = new URLSearchParams(window.location.search);
+    const inputPass = urlParams.get(CONFIG.bypassParam);
+
+    if (inputPass) {
+        // Obfuscate the input and compare it to the stored secret
+        // btoa() converts text to Base64 instantly.
+        if (btoa(inputPass) === CONFIG.bypassSecret) {
+            console.warn(`%c ${CONFIG.productName} [BYPASSED BY ADMIN] `, 'background: #00ff00; color: #000; font-weight: bold;');
+            
+            // Wipe the ban immediately
+            localStorage.removeItem(CONFIG.storageKey);
+            
+            // STOP EVERYTHING. The security wall dies here.
+            return; 
+        }
     }
 
-    // 3. THE SECURITY SYSTEM (Wrapped in a class, not started yet)
+    // 3. THE SECURITY SYSTEM (Only loads if password failed)
     class Coldwall {
         constructor() {
             this.state = this.loadState();
@@ -47,7 +57,7 @@
         }
 
         start() {
-            // Only runs if the password check FAILED.
+            // Check if already banned
             if (this.state.banned) {
                 this.enforceBan();
             } else {
@@ -64,6 +74,7 @@
             });
 
             document.addEventListener('keydown', (e) => {
+                // F12
                 if(e.key === 'F12') {
                     e.preventDefault();
                     this.handleViolation("F12 Debugger");
@@ -140,29 +151,7 @@
         }
     }
 
-    // 4. THE BOOTLOADER (Solves the Race Condition)
-    // We wrap the entire start process in an async function.
-    // The Coldwall class is NOT instantiated until the password check is done.
-    (async function boot() {
-        
-        const urlParams = new URLSearchParams(window.location.search);
-        const inputPass = urlParams.get(CONFIG.bypassParam); 
-
-        // A. Check Password (ASYNC WAIT)
-        if (inputPass) {
-            const isValid = await verifyPassword(inputPass);
-            
-            if (isValid) {
-                console.warn(`${CONFIG.productName} [BYPASSED BY ADMIN]`);
-                localStorage.removeItem(CONFIG.storageKey);
-                return; // EXIT. Do not load security.
-            }
-        }
-
-        // B. No Password or Wrong Password? -> LOAD SECURITY
-        // Only now does the class start and checking/banning happen.
-        new Coldwall().start();
-
-    })();
+    // Start
+    new Coldwall().start();
 
 })(window, document);
