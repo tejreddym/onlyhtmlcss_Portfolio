@@ -1,41 +1,38 @@
 /* ==========================================================================
-   TEJ_JET COLDWALL v2.4.0 (Commercial Core | Secure Async)
+   TEJ_JET COLDWALL v2.5.0 (Synchronous "Nuclear" Bypass)
    The Invisible Airlock | Proprietary Security Protocol
    (c) 2026 Tej Reddy Systems.
    ========================================================================== */
 
 (function(window, document) {
-    
-    // 1. CONFIGURATION (The "Commercial" Settings)
+
+    // --- 1. CONFIGURATION ---
     const CONFIG = {
         productName: "TEJ_JET COLDWALL",
-        maxStrikes: 1, 
-        
-        // SECURITY: We store the SHA-256 HASH of "tej_master"
-        // Hacker sees this -> "5994471..." -> They cannot guess "tej_master"
-        bypassParam: "pass",
-        bypassHash: "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5",
-        
+        maxStrikes: 1,
+        bypassParam: "pass",     // URL parameter (?pass=...)
+        bypassKey: "tej_master", // The Password
         storageKey: "tj_cw_security_log"
     };
 
-    // 2. CRYPTOGRAPHY ENGINE (The "Lock")
-    async function verifyPassword(inputPassword) {
-        if (!inputPassword) return false;
+    // --- 2. THE INSTANT BYPASS CHECK (Synchronous) ---
+    // We check this immediately. No waiting. No async.
+    const urlParams = new URLSearchParams(window.location.search);
+    const inputPass = urlParams.get(CONFIG.bypassParam);
+
+    if (inputPass === CONFIG.bypassKey) {
+        // ADMIN DETECTED
+        console.warn(`%c ${CONFIG.productName} [BYPASSED BY ADMIN] `, 'background: #00ff00; color: #000; font-weight: bold;');
         
-        // Convert text to binary
-        const msgBuffer = new TextEncoder().encode(inputPassword);
-        // Hash it (SHA-256)
-        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-        // Convert back to Hex string
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        // NUCLEAR OPTION: Wipe the ban record immediately
+        localStorage.removeItem(CONFIG.storageKey);
         
-        // Compare with stored lock
-        return hashHex === CONFIG.bypassHash;
+        // STOP SCRIPT EXECUTION HERE.
+        // The security system never loads. You are free.
+        return; 
     }
 
-    // 3. THE CLASS (The Logic)
+    // --- 3. THE SECURITY SYSTEM (Only loads if not Admin) ---
     class Coldwall {
         constructor() {
             this.state = this.loadState();
@@ -53,10 +50,11 @@
         }
 
         start() {
-            console.log(`${CONFIG.productName} [ARMED]`);
+            // Check if already banned
             if (this.state.banned) {
                 this.enforceBan();
             } else {
+                console.log(`${CONFIG.productName} [ARMED]`);
                 this.armTriggers();
                 this.armDebuggerTrap();
             }
@@ -75,11 +73,10 @@
                     this.handleViolation("F12 Debugger");
                     return;
                 }
-
-                // Complex Shortcuts (Windows + Mac)
+                // Ctrl+Shift+I/J/C/U
                 const isCtrlOrCmd = e.ctrlKey || e.metaKey;
                 const isShift = e.shiftKey;
-                const isAlt = e.altKey; 
+                const isAlt = e.altKey;
                 const key = e.key.toUpperCase();
 
                 if ( (isCtrlOrCmd && isShift && ['I','J','C'].includes(key)) ||
@@ -92,6 +89,7 @@
         }
 
         armDebuggerTrap() {
+            // The "Annoyance" Loop
             setInterval(() => {
                 const start = performance.now();
                 debugger; 
@@ -148,29 +146,7 @@
         }
     }
 
-    // 4. THE BOOTLOADER (Async Execution)
-    // This runs automatically when the script loads.
-    (async function boot() {
-        
-        // A. Check URL for Password
-        const urlParams = new URLSearchParams(window.location.search);
-        const inputPass = urlParams.get(CONFIG.bypassParam); // ?pass=...
-
-        // B. Verify Hash (If password is present)
-        if (inputPass) {
-            const isValid = await verifyPassword(inputPass);
-            if (isValid) {
-                console.log(`${CONFIG.productName} [BYPASSED BY ADMIN]`);
-                // If they were banned before, UNBAN them now
-                localStorage.removeItem(CONFIG.storageKey);
-                return; // STOP. Do not load security.
-            }
-        }
-
-        // C. No Valid Password? Load the Wall.
-        const app = new Coldwall();
-        app.start();
-
-    })();
+    // Start the System
+    new Coldwall().start();
 
 })(window, document);
