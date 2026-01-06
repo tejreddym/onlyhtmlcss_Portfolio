@@ -1,5 +1,5 @@
 /* ==========================================================================
-   TEJ_JET COLDWALL v4.1.0 (Geo-Tracking Enabled)
+   TEJ_JET COLDWALL v4.2.0 (Ironclad | Anti-Copy | Resize Detection)
    The Invisible Airlock | Proprietary Security Protocol
    (c) 2026 Tej Reddy Systems.
    ========================================================================== */
@@ -10,66 +10,45 @@
     const SUPABASE_URL = "https://dsadmqmdwcxcllhnsyga.supabase.co"; 
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzYWRtcW1kd2N4Y2xsaG5zeWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2MzI1NzQsImV4cCI6MjA4MzIwODU3NH0.0D8HCsZd5i_NUdYg35ZFmOGNMB5JEbzLA5rFOONOr1U"; 
 
-    // --- 2. LOCAL CONFIGURATION ---
+    // --- 2. CONFIGURATION ---
     const CONFIG = {
         productName: "TEJ_JET COLDWALL",
         maxStrikes: 1,
         bypassParam: "pass",
-        bypassHash: -1803499192, // Your Hash
+        bypassHash: -1803499192, 
         storageKey: "tj_cw_security_log"
     };
 
-    // --- 3. CLOUD LOGGING ENGINE (With Geo-Tracking) ---
+    // --- 3. CLOUD LOGGING ---
     async function logAttackToCloud(reason) {
         if (!SUPABASE_URL || SUPABASE_URL.includes("PASTE_YOUR")) return;
-
-        // A. Fetch Spy Data (IP, Location, ISP)
         let geoInfo = { ip: "Unknown", city: "Unknown", country: "Unknown", org: "Unknown" };
-        
         try {
-            // We ask ipapi.co "Who is this user?"
             const response = await fetch('https://ipapi.co/json/');
             const data = await response.json();
-            geoInfo = {
-                ip: data.ip || "Hidden",
-                city: data.city || "Unknown",
-                country: data.country_name || "Unknown",
-                org: data.org || "Unknown ISP"
-            };
-        } catch (error) {
-            console.warn("Geo-Location failed (Adblocker active?)");
-        }
+            geoInfo = { ip: data.ip, city: data.city, country: data.country_name, org: data.org };
+        } catch (e) {}
 
-        // B. Prepare the Dossier
         const logData = {
             trigger_reason: reason,
             url_path: window.location.pathname,
             user_agent: navigator.userAgent,
             screen_resolution: `${window.screen.width}x${window.screen.height}`,
-            // NEW FIELDS
             ip_address: geoInfo.ip,
             location: `${geoInfo.city}, ${geoInfo.country}`,
             isp: geoInfo.org
         };
 
-        // C. Send to Headquarters (Supabase)
         try {
             await fetch(`${SUPABASE_URL}/rest/v1/security_logs`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "apikey": SUPABASE_KEY,
-                    "Authorization": `Bearer ${SUPABASE_KEY}`
-                },
+                headers: { "Content-Type": "application/json", "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` },
                 body: JSON.stringify(logData)
             });
-            console.log("⚠️ Attack & Geo-Data Logged to Cloud.");
-        } catch (error) {
-            console.error("Cloud Log Failed:", error);
-        }
+        } catch (e) {}
     }
 
-    // --- 4. SYNC HASHING & SETUP ---
+    // --- 4. HASHING & SETUP ---
     function generateSyncHash(str) {
         let hash = 0;
         if (!str || str.length === 0) return hash;
@@ -79,18 +58,14 @@
         }
         return hash;
     }
-
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("generate_hash")) {
-        const input = urlParams.get("generate_hash");
-        alert(`[TEJ_JET SETUP]\nPassword: "${input}"\nHash: ${generateSyncHash(input)}`);
+        alert(`[TEJ_JET SETUP]\nHash: ${generateSyncHash(urlParams.get("generate_hash"))}`);
         throw new Error("Setup Complete.");
     }
-
-    const inputPass = urlParams.get(CONFIG.bypassParam);
-    if (inputPass) {
-        if (generateSyncHash(inputPass) === CONFIG.bypassHash) {
-            console.warn(`%c ${CONFIG.productName} [BYPASSED BY ADMIN] `, 'background: #00ff00; color: #000; font-weight: bold;');
+    if (urlParams.get(CONFIG.bypassParam)) {
+        if (generateSyncHash(urlParams.get(CONFIG.bypassParam)) === CONFIG.bypassHash) {
+            console.warn(`%c [BYPASSED BY ADMIN] `, 'color: #0f0; font-weight: bold;');
             localStorage.removeItem(CONFIG.storageKey);
             return; 
         }
@@ -100,6 +75,9 @@
     class Coldwall {
         constructor() {
             this.state = this.loadState();
+            // Snapshot initial window size to detect DevTools opening
+            this.initialWidth = window.innerWidth;
+            this.initialHeight = window.innerHeight;
         }
 
         loadState() {
@@ -120,31 +98,51 @@
                 console.log(`${CONFIG.productName} [ARMED]`);
                 this.armTriggers();
                 this.armDebuggerTrap();
+                this.armResizeTrap(); // NEW: Catches "Docked" DevTools
             }
         }
 
         armTriggers() {
-            document.addEventListener('contextmenu', (e) => {
+            // Block Right Click
+            document.addEventListener('contextmenu', (e) => { e.preventDefault(); this.handleViolation("Right Click Source Access"); });
+
+            // NEW: Block Selection & Copying
+            document.addEventListener('selectstart', (e) => e.preventDefault()); // Stop highlighting
+            document.addEventListener('copy', (e) => {
                 e.preventDefault();
-                this.handleViolation("Right Click Source Access");
+                navigator.clipboard.writeText("⚠️ COPYRIGHT TEJ REDDY. ACCESS DENIED."); // Poison the clipboard
+                this.handleViolation("Illegal Copy Attempt");
             });
+
+            // Block Shortcuts
             document.addEventListener('keydown', (e) => {
-                if(e.key === 'F12') {
-                    e.preventDefault();
-                    this.handleViolation("F12 Debugger");
-                    return;
-                }
+                if(e.key === 'F12') { e.preventDefault(); this.handleViolation("F12 Debugger"); return; }
                 const isCtrlOrCmd = e.ctrlKey || e.metaKey;
-                const isShift = e.shiftKey;
                 const key = e.key.toUpperCase();
-                if ( (isCtrlOrCmd && isShift && ['I','J','C'].includes(key)) ||
-                     (isCtrlOrCmd && key === 'U') ) {
-                    e.preventDefault();
-                    this.handleViolation("DevTools Shortcut Detected");
+                if ( (isCtrlOrCmd && e.shiftKey && ['I','J','C'].includes(key)) || (isCtrlOrCmd && key === 'U') ) {
+                    e.preventDefault(); this.handleViolation("DevTools Shortcut Detected");
                 }
             });
         }
 
+        // NEW: Detect Window Resize (Happens when DevTools docks to side/bottom)
+        armResizeTrap() {
+            window.addEventListener('resize', () => {
+                // If width/height changes significantly (threshold > 100px) instantly, it's likely DevTools
+                const widthDiff = this.initialWidth - window.innerWidth;
+                const heightDiff = this.initialHeight - window.innerHeight;
+                
+                if (widthDiff > 160 || heightDiff > 160) {
+                     // Check if it's just a normal resize or DevTools
+                     // Usually DevTools forces a resize but window.outerWidth stays same
+                     if ((window.outerWidth - window.innerWidth) > 160 || (window.outerHeight - window.innerHeight) > 160) {
+                         this.handleViolation("DevTools Dock Detected");
+                     }
+                }
+            });
+        }
+
+        // FASTER LOOP: 100ms instead of 1000ms
         armDebuggerTrap() {
             setInterval(() => {
                 const start = performance.now();
@@ -152,16 +150,13 @@
                 if (performance.now() - start > 100) {
                     this.handleViolation("DevTools Timing Attack");
                 }
-            }, 1000); 
+            }, 500); // Check twice a second
         }
 
         handleViolation(reason) {
             this.state.strikes++;
             this.saveState();
-            
-            // FIRE AND FORGET (Now includes Geo-Data)
             logAttackToCloud(reason);
-
             if (this.state.strikes > CONFIG.maxStrikes) this.triggerBan();
             else this.triggerWarning(reason);
         }
@@ -183,7 +178,7 @@
         enforceBan() {
             try { window.stop(); } catch(e){}
             document.documentElement.innerHTML = `<h1 style="color:red; text-align:center; margin-top:20%;">🚫 ACCESS DENIED</h1>`;
-            setInterval(() => { debugger; }, 100); 
+            setInterval(() => { debugger; }, 50); 
         }
     }
 
