@@ -1,0 +1,694 @@
+/* CSS CUSTOM PROPERTIES (THEME COLORS) */
+:root {
+  --color-bg-primary: #0d0d0d;
+  --color-bg-secondary: #202020;
+  --color-text-primary: #f2f2f2;
+  --color-text-secondary: #bfbfbf;
+  --color-accent: #00ff00;
+  --color-accent-dim: rgba(0, 255, 0, 0.6);
+  --color-accent-dark: #008f00;
+  --color-border: #737373;
+  --color-glass-bg: rgba(13, 13, 13, 0.5);
+  --color-glass-border: rgba(255, 255, 255, 0.05);
+  --color-monitor-bezel: #404040;
+  --color-terminal-prompt: #33ccff;
+  --color-admin: #FFD700;
+  --color-admin-glow: rgba(255, 215, 0, 0.5);
+  --color-error: #ff3333;
+  --font-primary: 'Libre Baskerville', serif;
+  --font-display: 'Playfair Display', serif;
+  --font-mono: 'Courier Prime', monospace;
+  --navbar-height: 80px;
+  
+  /* Fluid Typography Scale */
+  --font-size-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --font-size-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+  --font-size-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+  --font-size-md: clamp(1.125rem, 1rem + 0.625vw, 1.35rem);
+  --font-size-lg: clamp(1.35rem, 1.2rem + 0.75vw, 1.75rem);
+  --font-size-xl: clamp(1.75rem, 1.5rem + 1.25vw, 2.5rem);
+  --font-size-2xl: clamp(2.5rem, 2rem + 2.5vw, 4rem);
+  --font-size-3xl: clamp(3rem, 2.5rem + 2.5vw, 4.5rem);
+}
+
+/* ACCESSIBILITY - SCREEN READER ONLY */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* GLOBAL */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-primary);
+}
+
+/* --- NAVBAR STYLES (Global Glass) --- */
+.navbar {
+  min-height: var(--navbar-height); 
+  background-color: var(--color-glass-bg) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  border-bottom: 1px solid var(--color-glass-border);
+  letter-spacing: 4px;
+  font-size: var(--font-size-xs);
+  z-index: 1000;
+}
+
+.navbar-brand,
+.navbar-nav .nav-link {
+  color: var(--color-text-primary) !important;
+  border-radius: 1px;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--color-bg-primary) !important;
+  background-color: var(--color-text-primary);
+}
+
+.navbar-toggler {
+  border: none;
+  box-shadow: none !important;
+}
+
+.navbar-toggler-icon {
+  filter: invert(1);
+}
+
+/* --- MOBILE MENU SPECIFIC --- */
+@media (max-width: 991px) {
+  .navbar-collapse {
+    text-align: center;
+    background-color: rgba(10, 10, 10, 0.6); 
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 15px; 
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 20px 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+  .navbar-nav .nav-item {
+    margin-bottom: 12px;
+  }
+}
+
+/* MAIN HERO */
+.main {
+  height: calc(100vh - var(--navbar-height)); 
+  margin-top: var(--navbar-height);           
+}
+
+/* CARD */
+.dictionary-card {
+  width: 100%;
+  max-width: 590px;
+  aspect-ratio: 1 / 1;
+  border: 10px solid var(--color-text-primary);
+  display: flex;
+  align-items: center;
+}
+
+.dictionary-inner {
+  padding: 40px;
+  animation: fadeUp 1s ease forwards;
+}
+
+/* TYPOGRAPHY */
+.word {
+  font-family: var(--font-display);
+  font-size: var(--font-size-3xl);
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  line-height: 1.1;
+}
+
+.phonetic {
+  font-style: italic;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  letter-spacing: 0.04em;
+  margin-bottom: 32px;
+}
+
+.definition {
+  font-size: var(--font-size-md);
+  line-height: 1.6;
+  max-width: 38ch;
+}
+
+/* RIGHT ELEMENT (System Monitor Container) */
+.system-monitor {
+  width: 100%;            /* Ensure container is full width */
+  height: 100%;           /* Ensure full height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- BRAND DOT (System Status Light) --- */
+.brand-dot {
+  color: var(--color-accent); 
+  display: inline-block; 
+  text-shadow: 0 0 5px var(--color-accent-dim); 
+  animation: statusBlink 2s infinite ease-in-out;
+}
+
+@keyframes statusBlink {
+  0% { opacity: 1; text-shadow: 0 0 5px var(--color-accent-dim); }
+  50% { opacity: 0.3; text-shadow: none; }
+  100% { opacity: 1; text-shadow: 0 0 5px var(--color-accent-dim); }
+}
+
+.navbar-brand:hover .brand-dot {
+    animation-duration: 0.5s;
+    text-shadow: 0 0 15px var(--color-accent); 
+}
+
+/* --- SELECTION --- */
+::selection { background-color: var(--color-accent); color: #000000; text-shadow: none; }
+::-moz-selection { background-color: var(--color-accent); color: #000000; text-shadow: none; }
+
+/* --- NAV LINKS --- */
+.navbar-nav .nav-link.active {
+    background-color: transparent !important; 
+    box-shadow: none !important;
+    border: none !important;
+    color: var(--color-accent) !important;                
+    border-bottom: 2px solid var(--color-accent) !important; 
+    padding-bottom: 5px;                      
+    text-shadow: 0 0 10px var(--color-accent-dim); 
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--color-text-primary) !important;
+    background-color: var(--color-bg-secondary) !important; 
+    text-shadow: none;         
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link.active:hover {
+    color: var(--color-accent) !important;
+    background-color: transparent !important;
+    cursor: default;
+}
+
+/* =========================================
+   MONITOR & TERMINAL (REPAIRED & ROBUST)
+   ========================================= */
+
+/* 1. THE BEZEL (Outer Grey Box) */
+.monitor-box {
+  background-color: var(--color-monitor-bezel);
+  
+  /* DIMENSIONS - FIXED TO PREVENT COLLAPSE */
+  width: 100%;
+  max-width: 480px;
+  min-width: 350px;       /* <--- SAFETY NET: Prevents it from squashing */
+  height: 420px;          
+  
+  border-radius: 20px;     
+  border: 4px solid var(--color-border);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+  
+  position: relative; 
+  box-sizing: border-box;
+  margin: 0 auto; 
+  flex-shrink: 0;         /* <--- SAFETY NET: Tells Flexbox 'Do Not Shrink Me' */
+}
+
+/* 2. THE SCREEN (Glass Display) */
+.screen {
+  position: absolute;
+  top: 18px; bottom: 18px; left: 18px; right: 18px;
+  
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.95), rgba(10, 10, 10, 1));
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 1);
+  
+  overflow: hidden; 
+  display: flex;       
+  flex-direction: column;
+}
+
+/* 3. REFLECTION */
+.screen::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), transparent);
+  pointer-events: none;
+}
+
+/* 4. TERMINAL WRAPPER */
+.terminal {
+  width: 100%;
+  height: 100%;        
+  padding: 20px;       
+  font-family: var(--font-mono);
+  color: var(--color-text-primary);
+  overflow: hidden; 
+  display: flex; 
+  flex-direction: column;
+}
+
+/* 5. CHAT SCREEN (Wrapper) */
+#chat-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;        
+  overflow: hidden;    
+}
+
+/* 6. CHAT BOX (SCROLLABLE AREA) */
+#chat-box {
+  flex: 1 1 auto;      /* Grow to fill space */
+  min-height: 0;       /* <--- MAGIC FIX for Scrolling */
+  overflow-y: auto;    /* Enable Vertical Scroll */
+  
+  display: flex;
+  flex-direction: column;
+  padding-right: 5px; 
+}
+
+/* Push messages to bottom */
+#chat-box > :first-child {
+  margin-top: auto; 
+}
+
+/* 7. TEXT STYLES */
+.output-line {
+  margin-bottom: 10px;
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.prefix {
+  color: var(--color-accent);
+  font-weight: bold;
+  margin-right: 10px;
+  text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+}
+
+.user-prompt {
+  color: var(--color-terminal-prompt);
+  font-weight: bold;
+  margin-right: 10px;
+  font-size: var(--font-size-sm);
+}
+
+/* 8. INPUT LINE (Pinned) */
+.input-line {
+  flex: 0 0 auto;      
+  display: flex;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 10px;
+  margin-top: 5px;
+}
+
+.terminal-input {
+  background: transparent;
+  border: none;
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-base);
+  width: 100%;
+  outline: none;
+}
+
+/* SCROLLBAR STYLING */
+#chat-box::-webkit-scrollbar { width: 6px; }
+#chat-box::-webkit-scrollbar-track { background: transparent; }
+#chat-box::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+#chat-box::-webkit-scrollbar-thumb:hover { background: #666; }
+
+/* BOOT SEQUENCE */
+#boot-screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-accent); 
+  line-height: 1.5;
+}
+
+.boot-line {
+  margin-bottom: 4px;
+  opacity: 0; 
+  animation: fadeIn 0.1s forwards;
+}
+
+.timestamp { color: var(--color-accent-dark); margin-right: 8px; }
+
+@keyframes fadeIn { to { opacity: 1; } }
+
+
+/* =========================================
+   ADMIN MODE STYLES (SECRET HANDSHAKE)
+   ========================================= */
+
+/* The Monitor Border turns Gold */
+.monitor-box.admin-mode {
+    border-color: var(--color-admin) !important;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.4), 0 25px 50px rgba(0,0,0,0.7) !important;
+    transition: all 0.5s ease;
+}
+
+/* The Prompt User turns Red/Gold */
+.admin-mode .user-prompt {
+    color: var(--color-admin) !important;
+    text-shadow: 0 0 5px var(--color-admin-glow);
+}
+
+/* Specific System Messages */
+.sys-msg {
+    color: var(--color-error);
+    font-weight: bold;
+}
+
+/* =========================================
+   RESPONSIVE TYPOGRAPHY UTILITIES
+   ========================================= */
+
+/* Utility classes for consistent typography across the site */
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+.text-2xl { font-size: var(--font-size-2xl); }
+.text-3xl { font-size: var(--font-size-3xl); }
+
+/* Line height utilities */
+.leading-tight { line-height: 1.1; }
+.leading-snug { line-height: 1.375; }
+.leading-normal { line-height: 1.5; }
+.leading-relaxed { line-height: 1.625; }
+.leading-loose { line-height: 2; }
+
+/* Responsive spacing adjustments */
+@media (max-width: 768px) {
+  .dictionary-inner {
+    padding: clamp(20px, 5vw, 40px);
+  }
+  
+  .dictionary-card {
+    border-width: clamp(5px, 1vw, 10px);
+  }
+}
+
+
+/* =========================================
+   FLOATING ACTION MENU (FAB)
+   ========================================= */
+.floating-action-menu {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  z-index: 10002;
+}
+
+.fab-toggle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-accent), #00cc00);
+  border: 2px solid var(--color-accent);
+  color: var(--color-bg-primary);
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 255, 0, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.fab-toggle:hover {
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 6px 25px rgba(0, 255, 0, 0.6);
+}
+
+.fab-toggle.active {
+  transform: rotate(135deg);
+  background: linear-gradient(135deg, #ff3333, #cc0000);
+  border-color: #ff3333;
+}
+
+.fab-menu {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+}
+
+.fab-menu.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.fab-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: rgba(0, 255, 0, 0.1);
+  border: 2px solid var(--color-accent);
+  border-radius: 30px;
+  color: var(--color-accent);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(0, 255, 0, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  transform-origin: right center;
+}
+
+.fab-item:hover {
+  background: var(--color-accent);
+  color: var(--color-bg-primary);
+  transform: translateX(-5px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 255, 0, 0.4);
+}
+
+.fab-icon {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab-label {
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* =========================================
+   DOWNLOAD CV BUTTON
+   ========================================= */
+.cv-download-btn {
+  display: inline-block;
+  padding: 15px 30px;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
+  color: var(--color-bg-primary);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-weight: bold;
+  font-size: var(--font-size-base);
+  border: 2px solid var(--color-accent);
+  border-radius: 5px;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 255, 0, 0.3);
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+
+.cv-download-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: left 0.3s ease;
+}
+
+.cv-download-btn:hover::before {
+  left: 100%;
+}
+
+.cv-download-btn:hover {
+  background: transparent;
+  color: var(--color-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 255, 0, 0.5);
+}
+
+.cv-download-btn:active {
+  transform: translateY(0);
+}
+
+/* =========================================
+   QUICK LINKS SECTION
+   ========================================= */
+.quick-links {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.quick-link-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(0, 255, 0, 0.1);
+  border: 1px solid var(--color-accent);
+  border-radius: 25px;
+  color: var(--color-accent);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  transition: all 0.3s ease;
+}
+
+.quick-link-item:hover {
+  background: var(--color-accent);
+  color: var(--color-bg-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 255, 0, 0.3);
+}
+
+.quick-link-icon {
+  font-size: 1.2em;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .floating-action-menu {
+    bottom: 30px;
+    right: 20px;
+  }
+  
+  .fab-toggle {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+  
+  .fab-item {
+    padding: 10px 16px;
+    font-size: 12px;
+  }
+  
+  .fab-icon {
+    font-size: 16px;
+  }
+  
+  .quick-links {
+    gap: 10px;
+  }
+  
+  .quick-link-item {
+    padding: 8px 15px;
+    font-size: var(--font-size-xs);
+  }
+}
+
+/* =========================================
+   GITHUB STATS SECTION
+   ========================================= */
+.github-stats-container {
+  width: 100%;
+}
+
+.github-card {
+  background: rgba(0, 255, 0, 0.05);
+  border: 2px solid var(--color-accent);
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 255, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.github-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 25px rgba(0, 255, 0, 0.4);
+  border-color: #00ff00;
+}
+
+.github-stat-img,
+.github-graph-img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  display: block;
+}
+
+.github-stat-img {
+  max-height: 200px;
+  object-fit: contain;
+}
+
+.github-graph-img {
+  max-height: 300px;
+  object-fit: contain;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .github-card {
+    padding: 10px;
+  }
+  
+  .github-stat-img {
+    max-height: 180px;
+  }
+  
+  .github-graph-img {
+    max-height: 250px;
+  }
+}

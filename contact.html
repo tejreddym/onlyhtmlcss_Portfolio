@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="theme-color" content="#0d0d0d" />
     <noscript>
       <style>
         html,
@@ -32,7 +33,37 @@
     </noscript>
     <link rel="icon" href="./images/rocket.webp" type="image/webp" />
     <title>Uplink | tejreddym.</title>
+    <meta
+      name="description"
+      content="Connect with Tej Reddy - AI/ML Engineer and Full Stack Developer. Get in touch for collaboration opportunities and project inquiries."
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tejreddym.cv/contact" />
+    <meta
+      property="og:title"
+      content="Contact Tej Reddy | Collaboration & Inquiries"
+    />
+    <meta
+      property="og:description"
+      content="Get in touch for collaboration opportunities, project inquiries, or just to connect. Email, LinkedIn, and GitHub available."
+    />
+    <meta
+      property="og:image"
+      content="https://tejreddym.cv/images/rocket.webp"
+    />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Contact Tej Reddy" />
+    <meta
+      name="twitter:description"
+      content="Get in touch for collaboration opportunities and project inquiries."
+    />
+
+    <link rel="canonical" href="https://tejreddym.cv/contact" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -50,17 +81,25 @@
       crossorigin="anonymous"
     />
 
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="./proj-style.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/proj-style.css" />
   </head>
 
   <body>
     <!-- HEADER -->
     <section class="header">
-      <nav class="navbar navbar-expand-lg fixed-top">
+      <nav
+        class="navbar navbar-expand-lg fixed-top"
+        role="navigation"
+        aria-label="Main navigation"
+      >
         <div class="container">
-          <a class="navbar-brand" href="./index.html">
-            tejreddym<span class="brand-dot">.</span>
+          <a
+            class="navbar-brand"
+            href="./index.html"
+            aria-label="Home - tejreddym portfolio"
+          >
+            tejreddym<span class="brand-dot" aria-hidden="true">.</span>
           </a>
 
           <button
@@ -68,6 +107,9 @@
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navMenu"
+            aria-controls="navMenu"
+            aria-expanded="false"
+            aria-label="Toggle navigation menu"
           >
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -76,18 +118,36 @@
             class="collapse navbar-collapse justify-content-end"
             id="navMenu"
           >
-            <ul class="navbar-nav">
+            <ul class="navbar-nav" role="list">
               <li class="nav-item">
-                <a class="nav-link" href="./about.html">ABOUT</a>
+                <a class="nav-link" href="./about.html" aria-label="About page"
+                  >ABOUT</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./projects.html">PROJECTS</a>
+                <a
+                  class="nav-link"
+                  href="./projects.html"
+                  aria-label="Projects page"
+                  >PROJECTS</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./interests.html">INTERESTS</a>
+                <a
+                  class="nav-link"
+                  href="./interests.html"
+                  aria-label="Interests page"
+                  >INTERESTS</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="./contact.html">CONTACT ME</a>
+                <a
+                  class="nav-link active"
+                  href="./contact"
+                  aria-current="page"
+                  aria-label="Contact page - current"
+                  >CONTACT ME</a
+                >
               </li>
             </ul>
           </div>
@@ -126,8 +186,12 @@
                         <a
                           href="mailto:phoenixtej3468@gmail.com"
                           class="protocol-link"
+                          aria-label="Send email to phoenixtej3468@gmail.com"
                         >
-                          <span class="status-light online"></span>
+                          <span
+                            class="status-light online"
+                            aria-hidden="true"
+                          ></span>
                           <span class="link-label">EMAIL_UPLINK</span>
                           <span class="link-detail"
                             >phoenixtej3468@gmail.com</span
@@ -139,8 +203,14 @@
                         <a
                           href="https://www.linkedin.com/in/tej-reddy-m"
                           class="protocol-link"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Visit LinkedIn profile (opens in new tab)"
                         >
-                          <span class="status-light online"></span>
+                          <span
+                            class="status-light online"
+                            aria-hidden="true"
+                          ></span>
                           <span class="link-label">LINKEDIN_FEED</span>
                           <span class="link-detail">/in/tejreddym</span>
                         </a>
@@ -150,8 +220,14 @@
                         <a
                           href="https://github.com/tejreddym/"
                           class="protocol-link"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Visit GitHub profile (opens in new tab)"
                         >
-                          <span class="status-light idle"></span>
+                          <span
+                            class="status-light idle"
+                            aria-hidden="true"
+                          ></span>
                           <span class="link-label">GITHUB_REPO</span>
                           <span class="link-detail">/tejreddym</span>
                         </a>
@@ -171,40 +247,62 @@
                   <div class="form-content">
                     <h4 class="comms-header">>> TRANSMISSION CONSOLE</h4>
 
-                    <form>
+                    <form role="form" aria-label="Contact form">
                       <div class="mb-3 input-group-tech">
-                        <label class="tech-label"> > ENTER SOURCE ID </label>
+                        <label for="contact-name" class="tech-label">
+                          > ENTER SOURCE ID
+                        </label>
                         <input
                           type="text"
+                          id="contact-name"
+                          name="name"
                           class="form-control tech-input"
                           placeholder="Name or Callsign..."
                           required
+                          aria-required="true"
+                          aria-label="Your name or callsign"
                         />
                       </div>
 
                       <div class="mb-3 input-group-tech">
-                        <label class="tech-label"> > RETURN ADDRESS </label>
+                        <label for="contact-email" class="tech-label">
+                          > RETURN ADDRESS
+                        </label>
                         <input
                           type="email"
+                          id="contact-email"
+                          name="email"
                           class="form-control tech-input"
                           placeholder="email@domain.com"
                           required
+                          aria-required="true"
+                          aria-label="Your email address"
                         />
                       </div>
 
                       <div class="mb-4 input-group-tech">
-                        <label class="tech-label"> > INPUT PAYLOAD DATA </label>
+                        <label for="contact-message" class="tech-label">
+                          > INPUT PAYLOAD DATA
+                        </label>
                         <textarea
+                          id="contact-message"
+                          name="message"
                           class="form-control tech-input"
                           rows="4"
                           placeholder="Type your message stream here..."
                           required
+                          aria-required="true"
+                          aria-label="Your message"
                         ></textarea>
                       </div>
 
-                      <button type="submit" class="btn transmit-btn">
+                      <button
+                        type="submit"
+                        class="btn transmit-btn"
+                        aria-label="Send message"
+                      >
                         [ INITIATE TRANSMISSION ]
-                        <div class="btn-glitch"></div>
+                        <div class="btn-glitch" aria-hidden="true"></div>
                       </button>
                     </form>
                   </div>
@@ -228,5 +326,19 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
+    <script src="./js/contact-form.js"></script>
+    <script>
+      // Register Service Worker for offline functionality
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/service-worker.js")
+          .then((reg) =>
+            console.log("✅ Service Worker registered:", reg.scope)
+          )
+          .catch((err) =>
+            console.error("❌ Service Worker registration failed:", err)
+          );
+      }
+    </script>
   </body>
 </html>

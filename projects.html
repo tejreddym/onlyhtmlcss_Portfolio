@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="theme-color" content="#0d0d0d" />
     <noscript>
       <style>
         html,
@@ -32,7 +33,34 @@
     </noscript>
     <link rel="icon" href="./images/rocket.webp" type="image/webp" />
     <title>Projects | tejreddym.</title>
+    <meta
+      name="description"
+      content="Selected works by Tej Reddy: ATLAS Agent, Facial Attendance System, Core Banking System. Innovation in AI, Computer Vision, and Systems Engineering."
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tejreddym.cv/projects" />
+    <meta property="og:title" content="Projects | tejreddym Portfolio" />
+    <meta
+      property="og:description"
+      content="Innovative projects in AI, Computer Vision, and Systems Engineering: ATLAS Agent, Facial Attendance System, and Core Banking System."
+    />
+    <meta
+      property="og:image"
+      content="https://tejreddym.cv/images/project-1.webp"
+    />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Projects | tejreddym Portfolio" />
+    <meta
+      name="twitter:description"
+      content="Innovative projects in AI, Computer Vision, and Systems Engineering."
+    />
+
+    <link rel="canonical" href="https://tejreddym.cv/projects" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -47,22 +75,80 @@
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="./proj-style.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/proj-style.css" />
+
+    <!-- Structured Data (Schema.org JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Projects - tejreddym Portfolio",
+        "description": "Selected works showcasing innovation in AI, Computer Vision, and Systems Engineering",
+        "url": "https://tejreddym.cv/projects",
+        "author": {
+          "@type": "Person",
+          "name": "Divya Tej Reddy Maddala",
+          "url": "https://tejreddym.cv"
+        },
+        "hasPart": [
+          {
+            "@type": "CreativeWork",
+            "name": "ATLAS Agent",
+            "description": "Multi-functional AI agent built with Gradio and NLP",
+            "dateCreated": "2025",
+            "creator": {
+              "@type": "Person",
+              "name": "Divya Tej Reddy Maddala"
+            }
+          },
+          {
+            "@type": "CreativeWork",
+            "name": "Facial Attendance System",
+            "description": "Automated attendance tracking system using OpenCV",
+            "dateCreated": "2024",
+            "creator": {
+              "@type": "Person",
+              "name": "Divya Tej Reddy Maddala"
+            }
+          },
+          {
+            "@type": "CreativeWork",
+            "name": "Core Banking System",
+            "description": "Secure financial transaction system built in C",
+            "dateCreated": "2023",
+            "creator": {
+              "@type": "Person",
+              "name": "Divya Tej Reddy Maddala"
+            }
+          }
+        ]
+      }
+    </script>
   </head>
 
   <body>
     <section class="header">
-      <nav class="navbar navbar-expand-lg fixed-top">
+      <nav
+        class="navbar navbar-expand-lg fixed-top"
+        role="navigation"
+        aria-label="Main navigation"
+      >
         <div class="container">
-          <a class="navbar-brand" href="./index.html"
-            >tejreddym<span class="brand-dot">.</span></a
+          <a
+            class="navbar-brand"
+            href="./index.html"
+            aria-label="Home - tejreddym portfolio"
+            >tejreddym<span class="brand-dot" aria-hidden="true">.</span></a
           >
           <button
             class="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navMenu"
+            aria-controls="navMenu"
+            aria-expanded="false"
+            aria-label="Toggle navigation menu"
           >
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -70,18 +156,36 @@
             class="collapse navbar-collapse justify-content-end"
             id="navMenu"
           >
-            <ul class="navbar-nav">
+            <ul class="navbar-nav" role="list">
               <li class="nav-item">
-                <a class="nav-link" href="./about.html">ABOUT</a>
+                <a class="nav-link" href="./about.html" aria-label="About page"
+                  >ABOUT</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="./projects.html">PROJECTS</a>
+                <a
+                  class="nav-link active"
+                  href="./projects"
+                  aria-current="page"
+                  aria-label="Projects page - current"
+                  >PROJECTS</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./interests.html">INTRESTS</a>
+                <a
+                  class="nav-link"
+                  href="./interests.html"
+                  aria-label="Interests page"
+                  >INTERESTS</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./contact.html">CONTACT ME</a>
+                <a
+                  class="nav-link"
+                  href="./contact.html"
+                  aria-label="Contact page"
+                  >CONTACT ME</a
+                >
               </li>
             </ul>
           </div>
@@ -89,7 +193,11 @@
       </nav>
     </section>
 
-    <section class="projects-section">
+    <section
+      class="projects-section"
+      role="main"
+      aria-label="Projects showcase"
+    >
       <div class="container h-100 position-relative overflow-hidden">
         <div class="fixed-title-row text-center">
           <h1 class="page-title">Selected Works.</h1>
@@ -101,7 +209,11 @@
             <div class="col-lg-4 col-md-6">
               <div class="project-card">
                 <div class="card-image">
-                  <img src="./images/project-1.webp" alt="ATLAS AI" />
+                  <img
+                    src="./images/project-1.webp"
+                    alt="ATLAS AI"
+                    loading="lazy"
+                  />
                 </div>
                 <div class="card-content">
                   <div class="card-header-custom">
@@ -124,7 +236,11 @@
             <div class="col-lg-4 col-md-6">
               <div class="project-card">
                 <div class="card-image">
-                  <img src="./images/project-2.webp" alt="Facial Rec" />
+                  <img
+                    src="./images/project-2.webp"
+                    alt="Facial Rec"
+                    loading="lazy"
+                  />
                 </div>
                 <div class="card-content">
                   <div class="card-header-custom">
@@ -147,7 +263,11 @@
             <div class="col-lg-4 col-md-6">
               <div class="project-card">
                 <div class="card-image">
-                  <img src="./images/project-3.webp" alt="Banking" />
+                  <img
+                    src="./images/project-3.webp"
+                    alt="Banking"
+                    loading="lazy"
+                  />
                 </div>
                 <div class="card-content">
                   <div class="card-header-custom">
@@ -170,7 +290,11 @@
             <div class="col-lg-4 col-md-6">
               <div class="project-card">
                 <div class="card-image">
-                  <img src="./images/project-1.webp" alt="ATLAS Ent" />
+                  <img
+                    src="./images/project-1.webp"
+                    alt="ATLAS Ent"
+                    loading="lazy"
+                  />
                 </div>
                 <div class="card-content">
                   <div class="card-header-custom">
@@ -194,7 +318,11 @@
             <div class="col-lg-4 col-md-6">
               <div class="project-card">
                 <div class="card-image">
-                  <img src="./images/project-2.webp" alt="Vision Guard" />
+                  <img
+                    src="./images/project-2.webp"
+                    alt="Vision Guard"
+                    loading="lazy"
+                  />
                 </div>
                 <div class="card-content">
                   <div class="card-header-custom">
@@ -216,7 +344,11 @@
             <div class="col-lg-4 col-md-6">
               <div class="project-card">
                 <div class="card-image">
-                  <img src="./images/project-3.webp" alt="FinTech" />
+                  <img
+                    src="./images/project-3.webp"
+                    alt="FinTech"
+                    loading="lazy"
+                  />
                 </div>
                 <div class="card-content">
                   <div class="card-header-custom">
@@ -249,5 +381,18 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
+    <script>
+      // Register Service Worker for offline functionality
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/service-worker.js")
+          .then((reg) =>
+            console.log("✅ Service Worker registered:", reg.scope)
+          )
+          .catch((err) =>
+            console.error("❌ Service Worker registration failed:", err)
+          );
+      }
+    </script>
   </body>
 </html>

@@ -1189,3 +1189,18 @@ body {
     .input-group-tech { margin-bottom: 20px !important; }
     textarea.tech-input { height: auto; rows: 4; }
 }
+/* =========================================
+   PROJECT CARD HOVER EFFECTS
+   ========================================= */
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(0, 255, 0, 0.3);
+}
+
+.card:active {
+  transform: translateY(-4px) scale(1.01);
+}

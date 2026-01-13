@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#0d0d0d" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Offline - tejreddym</title>
+    <meta
+      name="description"
+      content="You are currently offline. Please check your internet connection."
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Courier New", Courier, monospace;
+        background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+        color: #00ff00;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .offline-container {
+        max-width: 600px;
+        padding: 40px;
+        background: rgba(0, 255, 0, 0.05);
+        border: 2px solid #00ff00;
+        border-radius: 10px;
+        box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
+      }
+
+      .offline-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+      }
+
+      .error-code {
+        font-size: 1.2rem;
+        color: #ff3333;
+        margin-bottom: 20px;
+        letter-spacing: 2px;
+      }
+
+      p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 30px;
+        color: #cccccc;
+      }
+
+      .retry-btn {
+        display: inline-block;
+        padding: 15px 40px;
+        background: transparent;
+        color: #00ff00;
+        border: 2px solid #00ff00;
+        text-decoration: none;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 1rem;
+        font-weight: bold;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .retry-btn:hover {
+        background: #00ff00;
+        color: #0d0d0d;
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+      }
+
+      .connection-status {
+        margin-top: 30px;
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .status-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        background: #ff3333;
+        border-radius: 50%;
+        margin-right: 8px;
+        animation: blink 1.5s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2rem;
+        }
+
+        .offline-icon {
+          font-size: 60px;
+        }
+
+        p {
+          font-size: 1rem;
+        }
+
+        .retry-btn {
+          padding: 12px 30px;
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="offline-container">
+      <div class="offline-icon" aria-hidden="true">📡</div>
+      <h1>Connection Lost</h1>
+      <p class="error-code">ERROR: NETWORK_OFFLINE</p>
+      <p>
+        Unable to establish connection to the server. Please check your internet
+        connection and try again.
+      </p>
+      <button class="retry-btn" onclick="window.location.reload()">
+        Retry Connection
+      </button>
+      <div class="connection-status">
+        <span class="status-indicator" aria-hidden="true"></span>
+        <span>Offline Mode Active</span>
+      </div>
+    </div>
+
+    <script>
+      // Automatically retry connection when online
+      window.addEventListener("online", function () {
+        window.location.reload();
+      });
+
+      // Update status indicator when connection is restored
+      function checkConnection() {
+        if (navigator.onLine) {
+          window.location.reload();
+        }
+      }
+
+      // Check connection every 5 seconds
+      setInterval(checkConnection, 5000);
+    </script>
+  </body>
+</html>

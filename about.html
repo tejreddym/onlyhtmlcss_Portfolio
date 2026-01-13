@@ -2,9 +2,37 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="theme-color" content="#0d0d0d" />
     <link rel="icon" href="./images/rocket.webp" type="image/webp" />
     <title>System Specs | tejreddym.</title>
+    <meta
+      name="description"
+      content="System specifications of Tej Reddy - 4th year AI/ML Engineering student at HITAM. Full-time developer specializing in Python automation and full-stack architecture."
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:url" content="https://tejreddym.cv/about" />
+    <meta property="og:title" content="About Tej Reddy | AI/ML Engineer" />
+    <meta
+      property="og:description"
+      content="4th year AI/ML Engineering student at HITAM. Full-time developer at Dreams and Degrees Edutech specializing in Python automation and full-stack architecture."
+    />
+    <meta
+      property="og:image"
+      content="https://tejreddym.cv/images/rocket.webp"
+    />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="About Tej Reddy | AI/ML Engineer" />
+    <meta
+      name="twitter:description"
+      content="AI/ML Engineering student and Full-time developer specializing in Python automation."
+    />
+
+    <link rel="canonical" href="https://tejreddym.cv/about" />
     <noscript>
       <style>
         html,
@@ -48,22 +76,32 @@
       crossorigin="anonymous"
     />
 
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="./proj-style.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/proj-style.css" />
   </head>
 
   <body>
     <section class="header">
-      <nav class="navbar navbar-expand-lg fixed-top">
+      <nav
+        class="navbar navbar-expand-lg fixed-top"
+        role="navigation"
+        aria-label="Main navigation"
+      >
         <div class="container">
-          <a class="navbar-brand" href="./index.html"
-            >tejreddym<span class="brand-dot">.</span></a
+          <a
+            class="navbar-brand"
+            href="./index.html"
+            aria-label="Home - tejreddym portfolio"
+            >tejreddym<span class="brand-dot" aria-hidden="true">.</span></a
           >
           <button
             class="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navMenu"
+            aria-controls="navMenu"
+            aria-expanded="false"
+            aria-label="Toggle navigation menu"
           >
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -71,18 +109,39 @@
             class="collapse navbar-collapse justify-content-end"
             id="navMenu"
           >
-            <ul class="navbar-nav">
+            <ul class="navbar-nav" role="list">
               <li class="nav-item">
-                <a class="nav-link active" href="./about.html">ABOUT</a>
+                <a
+                  class="nav-link active"
+                  href="./about"
+                  aria-current="page"
+                  aria-label="About page - current"
+                  >ABOUT</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./projects.html">PROJECTS</a>
+                <a
+                  class="nav-link"
+                  href="./projects.html"
+                  aria-label="Projects page"
+                  >PROJECTS</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./interests.html">INTRESTS</a>
+                <a
+                  class="nav-link"
+                  href="./interests.html"
+                  aria-label="Interests page"
+                  >INTERESTS</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./contact.html">CONTACT ME</a>
+                <a
+                  class="nav-link"
+                  href="./contact.html"
+                  aria-label="Contact page"
+                  >CONTACT ME</a
+                >
               </li>
             </ul>
           </div>
@@ -90,11 +149,52 @@
       </nav>
     </section>
 
-    <section class="projects-section">
+    <section class="projects-section" role="main" aria-label="About content">
       <div class="container h-100 position-relative overflow-hidden">
         <div class="fixed-title-row text-center">
           <h1 class="page-title">System Specs.</h1>
           <p class="page-subtitle">Identity, Architecture, and Logs.</p>
+        </div>
+
+        <!-- Floating Action Menu -->
+        <div class="floating-action-menu">
+          <button class="fab-toggle" aria-label="Toggle quick actions menu">
+            <span class="fab-icon">⚡</span>
+          </button>
+          <div class="fab-menu">
+            <a href="#" class="fab-item" download aria-label="Download resume">
+              <span class="fab-icon">📄</span>
+              <span class="fab-label">Resume</span>
+            </a>
+            <a
+              href="https://github.com/tejreddym"
+              class="fab-item"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+            >
+              <span class="fab-icon">💻</span>
+              <span class="fab-label">GitHub</span>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/tejreddym"
+              class="fab-item"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+            >
+              <span class="fab-icon">💼</span>
+              <span class="fab-label">LinkedIn</span>
+            </a>
+            <a
+              href="mailto:tejreddym@gmail.com"
+              class="fab-item"
+              aria-label="Email"
+            >
+              <span class="fab-icon">✉️</span>
+              <span class="fab-label">Email</span>
+            </a>
+          </div>
         </div>
 
         <div class="project-scroll-area about-scroll-fix">
@@ -287,6 +387,29 @@
               </div>
             </div>
           </div>
+
+          <!-- GitHub Activity Matrix -->
+          <div class="row mb-5">
+            <div class="col-12">
+              <h4 class="section-header">>> GITHUB ACTIVITY MATRIX</h4>
+            </div>
+            <div class="col-12">
+              <div class="github-stats-container">
+                <div class="row g-3">
+                  <div class="col-12">
+                    <div class="github-card">
+                      <img
+                        src="https://github-readme-activity-graph.vercel.app/graph?username=tejreddym&theme=react-dark&bg_color=0d0d0d&color=00ff00&line=00ff00&point=00ff00&area=true&hide_border=false&border_color=00ff00&custom_title=GitHub%20Activity%20Graph"
+                        alt="tejreddym's GitHub Contribution Chart"
+                        loading="lazy"
+                        class="github-graph-img"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -300,5 +423,19 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
+    <script src="./js/fab-menu.js"></script>
+    <script>
+      // Register Service Worker for offline functionality
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/service-worker.js")
+          .then((reg) =>
+            console.log("✅ Service Worker registered:", reg.scope)
+          )
+          .catch((err) =>
+            console.error("❌ Service Worker registration failed:", err)
+          );
+      }
+    </script>
   </body>
 </html>

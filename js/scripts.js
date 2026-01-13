@@ -173,18 +173,34 @@ document.addEventListener("DOMContentLoaded", function() {
                             headers: { 'Content-Type': 'application/json' }
                         });
 
+                        // Remove loading indicator
+                        const loadingElement = document.getElementById(loadingId);
+                        if (loadingElement) loadingElement.remove();
+
+                        // Check HTTP response status
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+
                         const data = await response.json();
-                        document.getElementById(loadingId).remove();
                         
                         if (data && data.reply) {
                             addChatMessage("PEPPERai", data.reply, "prefix");
+                        } else if (data && data.error) {
+                            addChatMessage("SYSTEM", `Error: ${data.error}`, "prefix");
                         } else {
-                            addChatMessage("PEPPERai", "Error: No response data.", "prefix");
+                            addChatMessage("SYSTEM", "Error: Invalid response format.", "prefix");
                         }
 
                     } catch (err) {
-                        if (document.getElementById(loadingId)) document.getElementById(loadingId).remove();
-                        addChatMessage("PEPPERai", "Error: Connection Failed.", "prefix");
+                        // Ensure loading indicator is removed
+                        const loadingElement = document.getElementById(loadingId);
+                        if (loadingElement) loadingElement.remove();
+                        
+                        // Provide specific error message
+                        const errorMsg = err.message || 'Connection Failed';
+                        addChatMessage("SYSTEM", `<span style="color: #ff0000;">ERROR:</span> ${errorMsg}`, "prefix");
+                        console.error('Chat API Error:', err);
                     }
                 }
 

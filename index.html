@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="theme-color" content="#0d0d0d" />
     <noscript>
       <style>
         html,
@@ -32,7 +33,52 @@
     </noscript>
     <link rel="icon" href="./images/rocket.webp" type="image/webp" />
     <title>tejreddym.</title>
+    <meta
+      name="description"
+      content="Tej Reddy - AI/ML Engineer, Full Stack Developer & Tech Lead. Bridging raw data with intelligent decision-making through Python automation and full-stack architecture."
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tejreddym.cv/" />
+    <meta
+      property="og:title"
+      content="tejreddym. | AI/ML Engineer & Full Stack Developer"
+    />
+    <meta
+      property="og:description"
+      content="Interactive portfolio showcasing AI/ML projects, computer vision systems, and full-stack development work. Features PEPPERai terminal interface."
+    />
+    <meta
+      property="og:image"
+      content="https://tejreddym.cv/images/rocket.webp"
+    />
+    <meta property="og:site_name" content="tejreddym Portfolio" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://tejreddym.cv/" />
+    <meta
+      name="twitter:title"
+      content="tejreddym. | AI/ML Engineer & Full Stack Developer"
+    />
+    <meta
+      name="twitter:description"
+      content="Interactive portfolio showcasing AI/ML projects, computer vision systems, and full-stack development work."
+    />
+    <meta
+      name="twitter:image"
+      content="https://tejreddym.cv/images/rocket.webp"
+    />
+
+    <!-- Additional SEO -->
+    <meta name="author" content="Divya Tej Reddy Maddala" />
+    <meta
+      name="keywords"
+      content="AI, Machine Learning, Full Stack Developer, Python, Computer Vision, Portfolio, Tej Reddy"
+    />
+    <link rel="canonical" href="https://tejreddym.cv/" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -48,7 +94,7 @@
       crossorigin="anonymous"
     />
 
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./css/style.css" />
 
     <style>
       body {
@@ -56,14 +102,74 @@
         height: 100vh !important;
       }
     </style>
+
+    <!-- Structured Data (Schema.org JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Divya Tej Reddy Maddala",
+        "alternateName": "Tej Reddy",
+        "url": "https://tejreddym.cv",
+        "image": "https://tejreddym.cv/images/rocket.webp",
+        "sameAs": [
+          "https://www.linkedin.com/in/tej-reddy-m",
+          "https://github.com/tejreddym"
+        ],
+        "jobTitle": "AI/ML Engineer and Full Stack Developer",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Dreams and Degrees Edutech Pvt. Ltd."
+        },
+        "alumniOf": {
+          "@type": "EducationalOrganization",
+          "name": "Hyderabad Institute of Technology and Management (HITAM)"
+        },
+        "knowsAbout": [
+          "Artificial Intelligence",
+          "Machine Learning",
+          "Python",
+          "Full Stack Development",
+          "Computer Vision",
+          "Automation"
+        ],
+        "email": "phoenixtej3468@gmail.com",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Hyderabad",
+          "addressCountry": "IN"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "tejreddym Portfolio",
+        "url": "https://tejreddym.cv",
+        "description": "Interactive portfolio showcasing AI/ML projects, computer vision systems, and full-stack development work",
+        "author": {
+          "@type": "Person",
+          "name": "Divya Tej Reddy Maddala"
+        },
+        "inLanguage": "en-US"
+      }
+    </script>
   </head>
 
   <body>
     <section class="header">
-      <nav class="navbar navbar-expand-lg fixed-top">
+      <nav
+        class="navbar navbar-expand-lg fixed-top"
+        role="navigation"
+        aria-label="Main navigation"
+      >
         <div class="container">
-          <a class="navbar-brand" href="/"
-            >tejreddym<span class="brand-dot">.</span></a
+          <a
+            class="navbar-brand"
+            href="/"
+            aria-label="Home - tejreddym portfolio"
+            >tejreddym<span class="brand-dot" aria-hidden="true">.</span></a
           >
 
           <button
@@ -71,6 +177,9 @@
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navMenu"
+            aria-controls="navMenu"
+            aria-expanded="false"
+            aria-label="Toggle navigation menu"
           >
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -79,18 +188,35 @@
             class="collapse navbar-collapse justify-content-end"
             id="navMenu"
           >
-            <ul class="navbar-nav">
+            <ul class="navbar-nav" role="list">
               <li class="nav-item">
-                <a class="nav-link" href="./about.html">ABOUT</a>
+                <a class="nav-link" href="./about.html" aria-label="About page"
+                  >ABOUT</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./projects.html">PROJECTS</a>
+                <a
+                  class="nav-link"
+                  href="./projects.html"
+                  aria-label="Projects page"
+                  >PROJECTS</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./interests.html">INTERESTS</a>
+                <a
+                  class="nav-link"
+                  href="./interests.html"
+                  aria-label="Interests page"
+                  >INTERESTS</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./contact.html">CONTACT ME</a>
+                <a
+                  class="nav-link"
+                  href="./contact.html"
+                  aria-label="Contact page"
+                  >CONTACT ME</a
+                >
               </li>
             </ul>
           </div>
@@ -98,7 +224,7 @@
       </nav>
     </section>
 
-    <section class="main">
+    <section class="main" role="main" aria-label="Homepage content">
       <div class="container h-100">
         <div class="row h-100 align-items-center">
           <div
@@ -121,23 +247,50 @@
             class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center"
           >
             <div class="system-monitor">
-              <div class="monitor-box">
+              <div
+                class="monitor-box"
+                role="region"
+                aria-label="Interactive terminal interface"
+              >
                 <div class="screen">
-                  <div class="terminal" id="terminal-interface">
-                    <div id="boot-screen"></div>
+                  <div
+                    class="terminal"
+                    id="terminal-interface"
+                    role="application"
+                    aria-label="PEPPERai Terminal"
+                  >
+                    <div
+                      id="boot-screen"
+                      aria-live="polite"
+                      aria-atomic="true"
+                    ></div>
 
                     <div id="chat-screen" style="display: none">
-                      <div class="terminal_body" id="chat-box"></div>
+                      <div
+                        class="terminal_body"
+                        id="chat-box"
+                        role="log"
+                        aria-live="polite"
+                        aria-atomic="false"
+                      ></div>
 
                       <div class="input-line">
-                        <span class="user-prompt">visitor@guest:~$</span>
+                        <span class="user-prompt" aria-hidden="true"
+                          >visitor@guest:~$</span
+                        >
                         <input
                           type="text"
                           id="user-input"
                           class="terminal-input"
                           placeholder="Type here..."
                           autocomplete="off"
+                          aria-label="Terminal command input"
+                          aria-describedby="terminal-instructions"
                         />
+                        <span id="terminal-instructions" class="sr-only"
+                          >Type commands or questions. Type /help for available
+                          commands.</span
+                        >
                       </div>
                     </div>
                   </div>
@@ -150,6 +303,19 @@
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./scripts.js"></script>
+    <script src="./js/scripts.js"></script>
+    <script>
+      // Register Service Worker for offline functionality
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/service-worker.js")
+          .then((reg) =>
+            console.log("✅ Service Worker registered:", reg.scope)
+          )
+          .catch((err) =>
+            console.error("❌ Service Worker registration failed:", err)
+          );
+      }
+    </script>
   </body>
 </html>
