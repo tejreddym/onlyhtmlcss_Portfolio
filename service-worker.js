@@ -3,7 +3,7 @@
  * Enables offline functionality and caching
  */
 
-const CACHE_NAME = 'tejreddym-v1';
+const CACHE_NAME = 'tejreddym-v2';
 const OFFLINE_URL = '/offline.html';
 
 // Files to cache for offline access
@@ -18,8 +18,8 @@ const FILES_TO_CACHE = [
   '/css/style.css',
   '/css/proj-style.css',
   '/js/scripts.js',
-  '/js/scroll-to-top.js',
   '/js/contact-form.js',
+  '/js/fab-menu.js',
   '/images/project-1.webp',
   '/images/project-2.webp',
   '/images/project-3.webp'
@@ -32,10 +32,10 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('[Service Worker] Caching files');
-        return cache.addAll(FILES_TO_CACHE);
-      })
-      .catch((error) => {
-        console.error('[Service Worker] Cache failed:', error);
+        return cache.addAll(FILES_TO_CACHE).catch((error) => {
+          console.warn('[Service Worker] Some files failed to cache:', error);
+          // Continue even if some files fail to cache
+        });
       })
   );
   self.skipWaiting();
@@ -61,23 +61,30 @@ self.addEventListener('activate', (event) => {
 
 // Fetch strategy: Network first, fall back to cache, then offline page
 self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  
+  // Only cache GET requests
+  if (request.method !== 'GET') {
+    return;
+  }
+  
   // Handle navigation requests (page loads)
-  if (event.request.mode === 'navigate') {
+  if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request)
+      fetch(request)
         .then((response) => {
           // Cache successful responses
           if (response && response.status === 200) {
             const responseClone = response.clone();
             caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseClone);
+              cache.put(request, responseClone);
             });
           }
           return response;
         })
         .catch(() => {
           // Network failed, try cache
-          return caches.match(event.request)
+          return caches.match(request)
             .then((cachedResponse) => {
               if (cachedResponse) {
                 return cachedResponse;
@@ -88,28 +95,28 @@ self.addEventListener('fetch', (event) => {
         })
     );
   } else {
-    // Handle other requests (CSS, JS, images, etc.)
+    // Handle other requests (CSS, JS, images, etc.) - cache first strategy
     event.respondWith(
-      caches.match(event.request)
+      caches.match(request)
         .then((cachedResponse) => {
           if (cachedResponse) {
             return cachedResponse;
           }
           // Not in cache, fetch from network
-          return fetch(event.request)
+          return fetch(request)
             .then((response) => {
               // Cache successful responses
               if (response && response.status === 200) {
                 const responseClone = response.clone();
                 caches.open(CACHE_NAME).then((cache) => {
-                  cache.put(event.request, responseClone);
+                  cache.put(request, responseClone);
                 });
               }
               return response;
             })
             .catch(() => {
-              // Network failed and not in cache
-              console.log('[Service Worker] Fetch failed for:', event.request.url);
+              console.log('[Service Worker] Fetch failed for:', request.url);
+              return null;
             });
         })
     );

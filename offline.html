@@ -175,8 +175,14 @@
         }
       }
 
-      // Check connection every 5 seconds
-      setInterval(checkConnection, 5000);
+      // Check connection every 3 seconds
+      setInterval(function () {
+        if (navigator.onLine) {
+          setTimeout(function () {
+            window.location.reload();
+          }, 1000);
+        }
+      }, 3000);
     </script>
   </body>
 </html>
