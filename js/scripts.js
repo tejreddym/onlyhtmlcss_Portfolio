@@ -209,7 +209,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- 4. INPUT LISTENER ---
     if (userInput) {
         // Character counter
-        const maxChars = 500;
+        const maxChars = 250;
         const charCounter = document.createElement('div');
         charCounter.className = 'char-counter';
         charCounter.style.cssText = 'position: absolute; bottom: 5px; right: 10px; font-size: 0.7rem; color: #666; font-family: monospace;';
@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function() {
         userInput.addEventListener('input', function() {
             const remaining = maxChars - userInput.value.length;
             charCounter.textContent = `${remaining}/${maxChars}`;
-            charCounter.style.color = remaining < 50 ? '#ff3333' : '#666';
+            charCounter.style.color = remaining < 25 ? '#ff3333' : '#666';
             
             if (userInput.value.length > maxChars) {
                 userInput.value = userInput.value.substring(0, maxChars);

@@ -19,10 +19,10 @@ export const handler = async (event) => {
       };
     }
     
-    if (message.length > 500) {
+    if (message.length > 250) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ reply: "Message too long. Please keep it under 500 characters." })
+        body: JSON.stringify({ reply: "Message too long. Please keep it under 250 characters." })
       };
     }
 
