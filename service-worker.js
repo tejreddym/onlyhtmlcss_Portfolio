@@ -62,6 +62,12 @@ self.addEventListener('activate', (event) => {
 // Fetch strategy: Network first, fall back to cache, then offline page
 self.addEventListener('fetch', (event) => {
   const { request } = event;
+  const url = new URL(request.url);
+  
+  // Ignore source map requests and chrome extensions
+  if (url.pathname.endsWith('.map') || request.url.startsWith('chrome-extension://')) {
+    return;
+  }
   
   // Only cache GET requests
   if (request.method !== 'GET') {
