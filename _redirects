@@ -1,0 +1,8 @@
+# Force HTTPS redirect
+http://tejreddym.cv/* https://tejreddym.cv/:splat 301!
+
+# Clean URL redirects (optional - if you want to support both)
+/about https://tejreddym.cv/about.html 301
+/projects https://tejreddym.cv/projects.html 301
+/interests https://tejreddym.cv/interests.html 301
+/contact https://tejreddym.cv/contact.html 301
