@@ -10,6 +10,37 @@ document.addEventListener("DOMContentLoaded", function() {
     // State variables
     let pendingRedirect = null; 
     let isAuthorized = false; // <--- THE SECRET STATE
+    let conversationHistory = []; // Store chat history
+    
+    // Load conversation history from localStorage
+    function loadConversationHistory() {
+        try {
+            const saved = localStorage.getItem('pepperai_conversation');
+            if (saved) {
+                conversationHistory = JSON.parse(saved);
+            }
+        } catch (e) {
+            console.log('Could not load conversation history');
+            conversationHistory = [];
+        }
+    }
+    
+    // Save conversation history to localStorage
+    function saveConversationHistory() {
+        try {
+            // Keep only last 10 messages to avoid token limits
+            const recentHistory = conversationHistory.slice(-10);
+            localStorage.setItem('pepperai_conversation', JSON.stringify(recentHistory));
+        } catch (e) {
+            console.log('Could not save conversation history');
+        }
+    }
+    
+    // Clear conversation history
+    function clearConversationHistory() {
+        conversationHistory = [];
+        localStorage.removeItem('pepperai_conversation');
+    }
 
     // The Boot Log Text
     const bootLogs = [
@@ -50,6 +81,9 @@ document.addEventListener("DOMContentLoaded", function() {
             chatScreen.style.flexDirection = 'column';
             chatScreen.style.height = '100%';
         }
+        
+        // Load previous conversation
+        loadConversationHistory();
         
         addChatMessage("PEPPERai", "System Online. RESTRICTED_MODE active.", "prefix");
         setTimeout(() => {
@@ -121,7 +155,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 case '/contact':  initiateRedirect("./contact.html"); break;
                 case '/clear':
                     chatBox.innerHTML = '';
-                    addChatMessage("PEPPERai", "Console cleared.", "prefix");
+                    clearConversationHistory();
+                    addChatMessage("PEPPERai", "Console and conversation history cleared.", "prefix");
                     break;
                 default:
                     addChatMessage("SYSTEM", `Unknown command '${cmd}'. Type /help.`, "prefix");
@@ -166,10 +201,16 @@ document.addEventListener("DOMContentLoaded", function() {
                     chatBox.scrollTop = chatBox.scrollHeight;
 
                     try {
+                        // Add user message to conversation history
+                        conversationHistory.push({ role: "user", content: text });
+                        
                         const response = await fetch('/.netlify/functions/chat', {
                             method: 'POST',
-                            // PASS THE AUTH STATE TO BACKEND
-                            body: JSON.stringify({ message: text, isAdmin: isAuthorized }),
+                            body: JSON.stringify({ 
+                                message: text, 
+                                isAdmin: isAuthorized,
+                                conversationHistory: conversationHistory
+                            }),
                             headers: { 'Content-Type': 'application/json' }
                         });
 
@@ -185,6 +226,10 @@ document.addEventListener("DOMContentLoaded", function() {
                         const data = await response.json();
                         
                         if (data && data.reply) {
+                            // Add assistant response to conversation history
+                            conversationHistory.push({ role: "assistant", content: data.reply });
+                            saveConversationHistory();
+                            
                             addChatMessage("PEPPERai", data.reply, "prefix");
                         } else if (data && data.error) {
                             addChatMessage("SYSTEM", `Error: ${data.error}`, "prefix");
