@@ -100,6 +100,40 @@ document.addEventListener("DOMContentLoaded", function() {
         chatBox.appendChild(div);
         chatBox.scrollTop = chatBox.scrollHeight; 
     }
+    
+    // --- 2B. STREAMING CHAT MESSAGE (TYPING EFFECT) ---
+    async function addStreamingMessage(sender, text, styleClass) {
+        if (!chatBox) return;
+        
+        const div = document.createElement('div');
+        div.className = 'output-line';
+        const senderSpan = document.createElement('span');
+        senderSpan.className = styleClass;
+        senderSpan.textContent = sender + ': ';
+        div.appendChild(senderSpan);
+        
+        const textSpan = document.createElement('span');
+        div.appendChild(textSpan);
+        chatBox.appendChild(div);
+        
+        // Stream text character by character
+        let index = 0;
+        const typingSpeed = 15; // milliseconds per character (lower = faster)
+        
+        return new Promise((resolve) => {
+            function typeNextChar() {
+                if (index < text.length) {
+                    textSpan.textContent += text[index];
+                    index++;
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                    setTimeout(typeNextChar, typingSpeed);
+                } else {
+                    resolve();
+                }
+            }
+            typeNextChar();
+        });
+    }
 
     // --- 3. COMMAND HANDLER ---
     function handleLocalCommand(text) {
@@ -174,10 +208,35 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // --- 4. INPUT LISTENER ---
     if (userInput) {
+        // Character counter
+        const maxChars = 500;
+        const charCounter = document.createElement('div');
+        charCounter.className = 'char-counter';
+        charCounter.style.cssText = 'position: absolute; bottom: 5px; right: 10px; font-size: 0.7rem; color: #666; font-family: monospace;';
+        userInput.parentElement.style.position = 'relative';
+        userInput.parentElement.appendChild(charCounter);
+        
+        // Update character count
+        userInput.addEventListener('input', function() {
+            const remaining = maxChars - userInput.value.length;
+            charCounter.textContent = `${remaining}/${maxChars}`;
+            charCounter.style.color = remaining < 50 ? '#ff3333' : '#666';
+            
+            if (userInput.value.length > maxChars) {
+                userInput.value = userInput.value.substring(0, maxChars);
+            }
+        });
+        
         userInput.addEventListener('keydown', async function(e) {
             if (e.key === 'Enter') {
                 const text = userInput.value.trim();
                 if (!text) return;
+                
+                // Check length
+                if (text.length > maxChars) {
+                    addChatMessage("SYSTEM", `Message too long. Max ${maxChars} characters.`, "prefix");
+                    return;
+                }
 
                 // 1. Determine Sender Name based on Auth State
                 const senderName = isAuthorized ? "root@system" : "visitor@guest";
@@ -230,7 +289,8 @@ document.addEventListener("DOMContentLoaded", function() {
                             conversationHistory.push({ role: "assistant", content: data.reply });
                             saveConversationHistory();
                             
-                            addChatMessage("PEPPERai", data.reply, "prefix");
+                            // Use streaming animation for response
+                            await addStreamingMessage("PEPPERai", data.reply, "prefix");
                         } else if (data && data.error) {
                             addChatMessage("SYSTEM", `Error: ${data.error}`, "prefix");
                         } else {

@@ -10,6 +10,21 @@ export const handler = async (event) => {
     if (!process.env.GROQ_API_KEY) {
       throw new Error("Missing Server API Key");
     }
+    
+    // Validate message length
+    if (!message || message.trim().length === 0) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ reply: "Please enter a message." })
+      };
+    }
+    
+    if (message.length > 500) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ reply: "Message too long. Please keep it under 500 characters." })
+      };
+    }
 
     // --- KNOWLEDGE BASE ---
     const knowledgeBase = `
