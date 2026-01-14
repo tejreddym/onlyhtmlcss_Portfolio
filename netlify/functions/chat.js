@@ -137,7 +137,7 @@ export const handler = async (event) => {
         model: "llama-3.1-8b-instant",
         messages: messages,
         temperature: 0.5,
-        max_tokens: 400
+        max_tokens: 60
       })
     });
 
@@ -147,16 +147,9 @@ export const handler = async (event) => {
       throw new Error(`Groq Error: ${data.error?.message || 'Unknown error'}`);
     }
 
-    // Enforce concise assistant responses (character capped)
-    const maxReplyChars = 250;
-    let reply = (data.choices?.[0]?.message?.content || '').trim();
-    if (reply.length > maxReplyChars) {
-      reply = reply.slice(0, maxReplyChars - 1).trimEnd() + '…';
-    }
-
     return {
       statusCode: 200,
-      body: JSON.stringify({ reply })
+      body: JSON.stringify({ reply: data.choices[0].message.content })
     };
 
   } catch (error) {
