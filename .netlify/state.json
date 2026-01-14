@@ -1,0 +1,20 @@
+{
+	"geolocation": {
+		"data": {
+			"city": "Visakhapatnam",
+			"country": {
+				"code": "IN",
+				"name": "India"
+			},
+			"subdivision": {
+				"code": "AP",
+				"name": "Andhra Pradesh"
+			},
+			"timezone": "Asia/Kolkata",
+			"latitude": 17.6774,
+			"longitude": 83.2036,
+			"postalCode": "530011"
+		},
+		"timestamp": 1768388205242
+	}
+}
