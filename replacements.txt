@@ -1,0 +1,1 @@
+gsk_[A-Za-z0-9_-]\+==>GROQ_KEY_REDACTED
