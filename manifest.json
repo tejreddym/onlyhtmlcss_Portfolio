@@ -1,0 +1,17 @@
+{
+  "name": "tejreddym. | Portfolio",
+  "short_name": "tejreddym.",
+  "description": "An interactive portfolio showcasing AI/ML engineering and full-stack development work.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#0d0d0d",
+  "icons": [
+    {
+      "src": "/images/rocket.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}

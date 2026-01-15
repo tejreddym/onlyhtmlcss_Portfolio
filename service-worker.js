@@ -3,7 +3,7 @@
  * Enables offline functionality and caching
  */
 
-const CACHE_NAME = 'tejreddym-v2';
+const CACHE_NAME = 'tejreddym-v3';
 const OFFLINE_URL = '/offline.html';
 
 // Files to cache for offline access
@@ -15,14 +15,18 @@ const FILES_TO_CACHE = [
   '/interests.html',
   '/contact.html',
   '/offline.html',
+  '/manifest.json',
   '/css/style.css',
   '/css/proj-style.css',
   '/js/scripts.js',
   '/js/contact-form.js',
   '/js/fab-menu.js',
+  '/images/rocket.webp',
   '/images/project-1.webp',
   '/images/project-2.webp',
-  '/images/project-3.webp'
+  '/images/project-3.webp',
+  'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Courier+Prime:wght@400;700&display=swap',
+  'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Courier+Prime:wght@400;700&family=Rajdhani:wght@500;700&display=swap'
 ];
 
 // Install service worker and cache essential files

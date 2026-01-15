@@ -127,6 +127,17 @@ body {
 .dictionary-inner {
   padding: 40px;
   animation: fadeUp 1s ease forwards;
+  text-align: left;
+}
+
+.site-tagline {
+  font-family: var(--font-display);
+  font-size: var(--font-size-sm);
+  letter-spacing: -0.02em;
+  margin: 0 0 12px 0;
+  line-height: 1.1;
+  text-align: left;
+  color: rgba(191, 191, 191, 0.7);
 }
 
 /* TYPOGRAPHY */
@@ -136,6 +147,8 @@ body {
   letter-spacing: -0.02em;
   margin-bottom: 12px;
   line-height: 1.1;
+  text-align: left;
+  margin-top: 0;
 }
 
 .phonetic {
@@ -144,12 +157,14 @@ body {
   font-size: var(--font-size-base);
   letter-spacing: 0.04em;
   margin-bottom: 32px;
+  text-align: left;
 }
 
 .definition {
   font-size: var(--font-size-md);
   line-height: 1.6;
   max-width: 38ch;
+  text-align: left;
 }
 
 /* RIGHT ELEMENT (System Monitor Container) */
